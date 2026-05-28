@@ -94,6 +94,95 @@
   }
   button.link:hover { color: var(--fg); text-decoration: underline; }
 
+  /* Infinite-mode header controls (Easier / Harder + End session). */
+  .header-bar.infinite-header { gap: 8px; }
+  .diff-control {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+  }
+  .diff-control:hover:not(:disabled) { background: var(--btn-hover); border-color: var(--accent); color: var(--accent); }
+  .diff-control:focus-visible { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35); }
+  .diff-control:disabled { opacity: 0.4; cursor: not-allowed; }
+  .header-bar .pill.streak-pill { background: #fef3c7; color: #92400e; }
+  button.finish {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  button.finish:hover { color: var(--wrong-fg); border-color: #fecaca; background: #fef2f2; }
+
+  /* Inline toast for "Switching to X for the next question". Lives outside
+     #app so it never gets re-rendered, fades in/out without disturbing
+     layout. */
+  #infinite-toast {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translate(-50%, -8px);
+    background: #1f2937;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  #infinite-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Infinite-mode results card. */
+  .infinite-results {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 26px;
+    margin: 14px 0 18px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .infinite-results h1 { margin: 0 0 4px; font-size: 22px; }
+  .infinite-results .sub { color: var(--muted); margin: 0 0 18px; font-size: 14px; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .stat-grid .stat {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat-grid .stat .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-grid .stat .value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; margin-top: 2px; }
+  .infinite-results .breakdown {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0 0;
+    flex-wrap: wrap;
+  }
+  .infinite-results .breakdown .celeb-pill { font-size: 13px; padding: 5px 12px; }
+
   /* Progress bar (segmented) */
   .progress-bar.segmented {
     display: flex;
@@ -155,21 +244,43 @@
   @media (max-width: 600px) {
     .options.opts-2 { flex-direction: column; }
   }
+  /* ---------------------------------------------------------------------
+   * Option buttons.
+   *
+   * Click-reliability rules (do not violate):
+   *   - The button's intrinsic box (width / height / padding / border-width /
+   *     font-weight / margin) MUST be identical across every state:
+   *     default, hover, focus, active, .correct, .wrong, .muted-opt.
+   *     Anything that changes the box size makes the button shift out from
+   *     under the cursor mid-click and drops the click.
+   *   - Hover decorations like the "→ Next" hint are positioned absolutely
+   *     and use pointer-events: none so they neither shift layout nor
+   *     swallow clicks.
+   *   - Focus rings use box-shadow, not outline / border-width changes.
+   *   - touch-action: manipulation removes the 300ms mobile tap delay.
+   * --------------------------------------------------------------------- */
   button.option {
     width: 100%;
+    min-height: 52px;
     text-align: left;
     padding: 14px 18px;
     font-size: 16px;
+    font-weight: 500;
     background: var(--btn-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
+    outline: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     color: var(--fg);
     position: relative;
-    transition: background 0.12s, border-color 0.12s;
+    transition: background 0.12s, border-color 0.12s, box-shadow 0.12s, opacity 0.12s;
   }
   button.option:hover { background: var(--btn-hover); border-color: var(--accent); }
   button.option:active { background: var(--btn-active); }
+  button.option:focus-visible { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35); }
+  button.option:disabled { cursor: default; }
   .key-hint {
     display: inline-block;
     margin-right: 10px;
@@ -213,6 +324,7 @@
     transform: translateY(-50%);
     font-size: 12px;
     color: var(--muted);
+    pointer-events: none;
   }
   .feedback-line { font-size: 15px; margin: 8px 0 12px; }
   .feedback-line.correct-line { color: var(--correct-fg); font-weight: 600; }
@@ -365,6 +477,7 @@
 </style>
 </head>
 <body>
+<div id="infinite-toast" role="status" aria-live="polite"></div>
 <main id="app"></main>
 <script>
 "use strict";
@@ -823,15 +936,123 @@ function startNewSession() {
   render();
 }
 
+// Infinite mode: an open-ended drill-style session.
+//   - Pulls one question at a time from a per-difficulty bag (shuffled list
+//     of all eligible ids; refilled when empty so questions don't repeat
+//     until the whole pool has been seen).
+//   - Difficulty is mutable mid-session via the header controls; changes
+//     take effect on the next question, never rewriting the current one.
+//   - All state lives in memory only — refreshing the page returns to the
+//     5-question test.
+function startInfiniteSession(initialDifficulty) {
+  const d = (VALID_DIFFICULTIES.indexOf(initialDifficulty) !== -1) ? initialDifficulty : "medium";
+  session = {
+    mode: "infinite",
+    difficulty: d,
+    bags: { easy: [], medium: [], hard: [] },
+    answers: {},
+    playOrder: [],
+    history: [],
+    correctCount: 0,
+    totalAnswered: 0,
+    streak: 0,
+    bestStreak: 0,
+    totalTimeMs: 0,
+    questionStartedAt: 0,
+    currentQid: null,
+    groundTruth: GROUND_TRUTH,
+    startedAt: new Date().toISOString()
+  };
+  drawNextInfiniteQuestion();
+  currentIndex = 0;
+  dismissedFeedbackFor = new Set();
+  suppressNextFade = true;
+  screen = "quiz";
+  render();
+}
+
+function drawNextInfiniteQuestion() {
+  if (!session || session.mode !== "infinite") return;
+  const d = session.difficulty;
+  if (!session.bags[d] || session.bags[d].length === 0) {
+    session.bags[d] = shuffle(poolForBand(d).map(function (q) { return q.id; }));
+  }
+  session.currentQid = session.bags[d].pop();
+  session.questionStartedAt = Date.now();
+  // The bag refills once exhausted, so a question can come around for a
+  // second pass. Clear any prior "dismissed feedback" flag so the user
+  // sees feedback again on this fresh attempt.
+  if (session.currentQid != null) dismissedFeedbackFor.delete(session.currentQid);
+  if (session.currentQid != null && session.playOrder.indexOf(session.currentQid) === -1) {
+    session.playOrder.push(session.currentQid);
+  }
+}
+
+function stepDifficulty(d, dir) {
+  const order = ["easy", "medium", "hard"];
+  const i = order.indexOf(d);
+  if (i === -1) return d;
+  const j = i + dir;
+  if (j < 0 || j >= order.length) return d;
+  return order[j];
+}
+
+function setInfiniteDifficulty(newDiff) {
+  if (!session || session.mode !== "infinite") return;
+  if (newDiff === session.difficulty) return;
+  if (VALID_DIFFICULTIES.indexOf(newDiff) === -1) return;
+  session.difficulty = newDiff;
+  showInfiniteToast("Switching to " + DIFFICULTY_LABELS[newDiff].toLowerCase() + " for the next question.");
+  render();
+}
+
+let _infiniteToastTimer = null;
+function showInfiniteToast(msg) {
+  const t = document.getElementById("infinite-toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add("show");
+  if (_infiniteToastTimer) clearTimeout(_infiniteToastTimer);
+  _infiniteToastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
+}
+
+function endInfiniteSession() {
+  if (!session || session.mode !== "infinite") return;
+  screen = "infinite-results";
+  render();
+}
+
+function continueInfiniteSession() {
+  if (!session || session.mode !== "infinite") return;
+  if (session.currentQid == null) drawNextInfiniteQuestion();
+  suppressNextFade = true;
+  screen = "quiz";
+  render();
+}
+
+function pickInfiniteStartDifficulty(percent) {
+  if (percent >= 75) return "hard";
+  if (percent >= 40) return "medium";
+  return "easy";
+}
+
 function getQuestion(idx) {
-  if (!session || idx < 0 || idx >= session.order.length) return null;
+  if (!session || idx < 0 || !session.order || idx >= session.order.length) return null;
   const id = session.order[idx];
   return QUESTIONS.find(function (q) { return q.id === id; });
 }
 
+function getCurrentQuestion() {
+  if (!session) return null;
+  if (session.mode === "infinite") {
+    return session.currentQid != null ? QUESTIONS.find(function (q) { return q.id === session.currentQid; }) : null;
+  }
+  return getQuestion(currentIndex);
+}
+
 function isFeedbackActive() {
   if (!session || !session.groundTruth) return false;
-  const q = getQuestion(currentIndex);
+  const q = getCurrentQuestion();
   if (!q) return false;
   if (dismissedFeedbackFor.has(q.id)) return false;
   if (!Object.prototype.hasOwnProperty.call(session.groundTruth, q.id)) return false;
@@ -855,6 +1076,30 @@ function computeScore() {
 
 function selectAnswer(id, choice) {
   if (!session) return;
+  // In infinite mode, record the user's pick on the question's intrinsic
+  // difficulty (NOT the header's possibly-changed difficulty), update
+  // running stats, then re-render to show feedback.
+  if (session.mode === "infinite") {
+    if (choice === null) { advance(); return; }
+    const q = QUESTIONS.find(function (qq) { return qq.id === id; });
+    if (!q) return;
+    session.answers[id] = choice;
+    const truth = session.groundTruth[id];
+    const correct = (choice === truth);
+    const ms = session.questionStartedAt ? Math.max(0, Date.now() - session.questionStartedAt) : 0;
+    session.history.push({ id: id, choice: choice, correct: correct, difficulty: q.difficulty, ms: ms });
+    session.totalAnswered++;
+    session.totalTimeMs += ms;
+    if (correct) {
+      session.correctCount++;
+      session.streak++;
+      if (session.streak > session.bestStreak) session.bestStreak = session.streak;
+    } else {
+      session.streak = 0;
+    }
+    render();
+    return;
+  }
   session.answers[id] = choice;
   if (choice === null) {
     advance();
@@ -870,6 +1115,14 @@ function selectAnswer(id, choice) {
 
 function advance() {
   if (!session) return;
+  if (session.mode === "infinite") {
+    const cur = getCurrentQuestion();
+    if (cur) dismissedFeedbackFor.add(cur.id);
+    drawNextInfiniteQuestion();
+    suppressNextFade = false;
+    render();
+    return;
+  }
   const q = getQuestion(currentIndex);
   if (q) dismissedFeedbackFor.add(q.id);
   currentIndex++;
@@ -881,7 +1134,8 @@ function advance() {
 }
 
 function back() {
-  if (!session || currentIndex === 0) return;
+  if (!session || session.mode !== "test") return;
+  if (currentIndex === 0) return;
   currentIndex--;
   suppressNextFade = true;
   const prev = getQuestion(currentIndex);
@@ -933,6 +1187,8 @@ function clearSidebarHighlight() {
 
 // --- Header ------------------------------------------------------------------
 function renderHeaderBar() {
+  if (session && session.mode === "infinite") return renderInfiniteHeader();
+
   const bar = el("div", { class: "header-bar" });
 
   if (currentIndex > 0) {
@@ -955,6 +1211,45 @@ function renderHeaderBar() {
   return bar;
 }
 
+function renderInfiniteHeader() {
+  const bar = el("div", { class: "header-bar infinite-header" });
+
+  const cur = session.difficulty;
+  const easyBtn = el("button", {
+    class: "diff-control",
+    text: "\u2190 Easier",
+    onclick: function () { setInfiniteDifficulty(stepDifficulty(cur, -1)); }
+  });
+  if (cur === "easy") easyBtn.disabled = true;
+  bar.appendChild(easyBtn);
+
+  bar.appendChild(el("span", { class: "diff-tag diff-" + cur, text: DIFFICULTY_LABELS[cur] }));
+
+  const hardBtn = el("button", {
+    class: "diff-control",
+    text: "Harder \u2192",
+    onclick: function () { setInfiniteDifficulty(stepDifficulty(cur, +1)); }
+  });
+  if (cur === "hard") hardBtn.disabled = true;
+  bar.appendChild(hardBtn);
+
+  bar.appendChild(el("span", {
+    class: "pill spacer",
+    text: "Correct: " + session.correctCount + " / " + session.totalAnswered
+  }));
+  bar.appendChild(el("span", {
+    class: "pill streak-pill",
+    text: "Streak: " + session.streak
+  }));
+  bar.appendChild(el("button", {
+    class: "finish",
+    text: "End session",
+    onclick: endInfiniteSession
+  }));
+
+  return bar;
+}
+
 function renderProgressBar() {
   const bar = el("div", { class: "progress-bar segmented" });
   session.order.forEach(function (id) {
@@ -969,12 +1264,16 @@ function renderProgressBar() {
 // --- Quiz screen -------------------------------------------------------------
 function renderQuiz() {
   if (!session) { startNewSession(); return; }
-  if (currentIndex >= session.order.length) { screen = "results"; render(); return; }
-  const q = getQuestion(currentIndex);
+  if (session.mode === "test" && currentIndex >= session.order.length) { screen = "results"; render(); return; }
+  // Make sure infinite mode always has a current question loaded.
+  if (session.mode === "infinite" && session.currentQid == null) drawNextInfiniteQuestion();
+  const q = getCurrentQuestion();
   if (!q) return;
 
-  if (!session.playOrder) session.playOrder = [];
-  if (session.playOrder.indexOf(q.id) === -1) session.playOrder.push(q.id);
+  if (session.mode === "test") {
+    if (!session.playOrder) session.playOrder = [];
+    if (session.playOrder.indexOf(q.id) === -1) session.playOrder.push(q.id);
+  }
 
   const feedback = isFeedbackActive();
 
@@ -986,7 +1285,7 @@ function renderQuiz() {
   layout.appendChild(renderSidebar(q.set));
   app.appendChild(layout);
 
-  main.appendChild(renderProgressBar());
+  if (session.mode === "test") main.appendChild(renderProgressBar());
 
   const body = el("div", { class: "question-container" + (suppressNextFade ? "" : " fade-in") });
   suppressNextFade = false;
@@ -1101,11 +1400,21 @@ function renderCelebrationCard() {
 function renderResults() {
   app.appendChild(renderCelebrationCard());
 
+  const score = computeScore();
+  const startPct = score ? score.percent : 0;
   const playRow = el("div", { class: "button-row" });
   playRow.appendChild(el("button", {
-    class: "primary",
+    class: "secondary",
     text: "Play again",
     onclick: function () { startNewSession(); }
+  }));
+  playRow.appendChild(el("button", {
+    class: "primary",
+    text: "Keep playing \u2192",
+    title: "Start an infinite drill at " + DIFFICULTY_LABELS[pickInfiniteStartDifficulty(startPct)].toLowerCase() + " difficulty",
+    onclick: function () {
+      startInfiniteSession(pickInfiniteStartDifficulty(startPct));
+    }
   }));
   app.appendChild(playRow);
 
@@ -1145,12 +1454,78 @@ function renderResults() {
   });
 }
 
+function renderInfiniteResults() {
+  if (!session || session.mode !== "infinite") { startNewSession(); return; }
+
+  const card = el("div", { class: "infinite-results" });
+  card.appendChild(el("h1", { text: "Infinite run complete" }));
+  const subText = (session.totalAnswered === 0)
+    ? "No questions answered yet."
+    : "Nice run. Take a breather, then keep going or restart.";
+  card.appendChild(el("p", { class: "sub", text: subText }));
+
+  const accuracy = (session.totalAnswered > 0)
+    ? Math.round((session.correctCount / session.totalAnswered) * 1000) / 10
+    : 0;
+  const avgSec = (session.totalAnswered > 0)
+    ? Math.round(session.totalTimeMs / session.totalAnswered / 100) / 10
+    : 0;
+
+  const stats = el("div", { class: "stat-grid" });
+  function stat(label, value) {
+    const s = el("div", { class: "stat" });
+    s.appendChild(el("div", { class: "label", text: label }));
+    s.appendChild(el("div", { class: "value", text: value }));
+    return s;
+  }
+  stats.appendChild(stat("Answered", String(session.totalAnswered)));
+  stats.appendChild(stat("Correct", session.correctCount + " / " + session.totalAnswered));
+  stats.appendChild(stat("Accuracy", accuracy + "%"));
+  stats.appendChild(stat("Best streak", String(session.bestStreak)));
+  if (session.totalAnswered > 0) stats.appendChild(stat("Avg time", avgSec + "s"));
+  card.appendChild(stats);
+
+  // Per-difficulty breakdown.
+  const buckets = { easy: { c: 0, t: 0 }, medium: { c: 0, t: 0 }, hard: { c: 0, t: 0 } };
+  (session.history || []).forEach(function (h) {
+    if (!buckets[h.difficulty]) return;
+    buckets[h.difficulty].t++;
+    if (h.correct) buckets[h.difficulty].c++;
+  });
+  const breakdown = el("div", { class: "breakdown" });
+  VALID_DIFFICULTIES.forEach(function (d) {
+    const b = buckets[d];
+    breakdown.appendChild(el("span", {
+      class: "celeb-pill diff-" + d + (b.t === 0 ? " dim" : ""),
+      text: DIFFICULTY_LABELS[d] + " " + b.c + "/" + b.t
+    }));
+  });
+  card.appendChild(breakdown);
+  app.appendChild(card);
+
+  const row = el("div", { class: "button-row" });
+  row.appendChild(el("button", {
+    class: "secondary",
+    text: "Play again from start",
+    onclick: function () { startNewSession(); }
+  }));
+  if (session.currentQid != null || session.totalAnswered > 0) {
+    row.appendChild(el("button", {
+      class: "primary",
+      text: "Continue infinite",
+      onclick: continueInfiniteSession
+    }));
+  }
+  app.appendChild(row);
+}
+
 // --- Render dispatch ---------------------------------------------------------
 function render() {
   app.innerHTML = "";
   document.body.classList.toggle("has-sidebar", screen === "quiz" && !!session);
   if (screen === "quiz") renderQuiz();
   else if (screen === "results") renderResults();
+  else if (screen === "infinite-results") renderInfiniteResults();
   window.scrollTo(0, 0);
 }
 
@@ -1170,9 +1545,14 @@ document.addEventListener("keydown", function (e) {
       }
       return;
     }
+    // Infinite-mode difficulty shortcuts: [ moves down, ] moves up.
+    if (session.mode === "infinite") {
+      if (e.key === "[") { e.preventDefault(); setInfiniteDifficulty(stepDifficulty(session.difficulty, -1)); return; }
+      if (e.key === "]") { e.preventDefault(); setInfiniteDifficulty(stepDifficulty(session.difficulty, +1)); return; }
+    }
     const num = parseInt(e.key, 10);
     if (Number.isInteger(num) && num >= 1 && num <= 9) {
-      const q = getQuestion(currentIndex);
+      const q = getCurrentQuestion();
       if (!q || num > q.options.length) return;
       e.preventDefault();
       selectAnswer(q.id, q.options[num - 1]);
@@ -1180,7 +1560,13 @@ document.addEventListener("keydown", function (e) {
   } else if (screen === "results") {
     if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
       e.preventDefault();
-      startNewSession();
+      const score = computeScore();
+      startInfiniteSession(pickInfiniteStartDifficulty(score ? score.percent : 0));
+    }
+  } else if (screen === "infinite-results") {
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      continueInfiniteSession();
     }
   }
 });
