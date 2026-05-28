@@ -25,7 +25,6 @@
     --wrong-fg: #991b1b;
     --pill-bg: #eef2ff;
     --pill-fg: #3730a3;
-    --error-fg: #b91c1c;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -38,51 +37,88 @@
     line-height: 1.6;
   }
   main {
-    max-width: 640px;
+    max-width: 1024px;
     margin: 0 auto;
-    padding: 0 20px 80px;
+    padding: 16px 20px 60px;
   }
-  h1 {
-    font-size: 28px;
-    margin: 24px 0 12px;
-    line-height: 1.3;
-  }
-  h2 {
-    font-size: 20px;
-    margin: 32px 0 12px;
-    line-height: 1.3;
-  }
-  h3 {
-    font-size: 16px;
-    margin: 24px 0 8px;
-    line-height: 1.3;
-  }
-  p { margin: 0 0 16px; }
+  body.has-sidebar main { max-width: 1024px; }
+  h1 { font-size: 24px; margin: 16px 0 12px; }
+  h2 { font-size: 18px; margin: 24px 0 10px; }
+  p { margin: 0 0 14px; }
   .muted { color: var(--muted); font-size: 14px; }
-  .progress-bar {
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 24px;
+
+  /* Header bar */
+  .header-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 0 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
   }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 0.2s ease;
+  .header-bar .progress-text {
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
-  .category {
-    color: var(--muted);
+  .header-bar .pill {
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    padding: 3px 10px;
+    border-radius: 999px;
     font-size: 13px;
+    font-weight: 600;
+  }
+  .header-bar .spacer { margin-left: auto; }
+  .diff-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    margin-bottom: 8px;
+    padding: 4px 12px;
+    border-radius: 999px;
   }
+  .header-bar .diff-tag { font-size: 13px; padding: 5px 14px; }
+  .diff-easy { background: #a7f3d0; color: #065f46; }
+  .diff-medium { background: #fde68a; color: #92400e; }
+  .diff-hard { background: #fecaca; color: #991b1b; }
+  button.link {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button.link:hover { color: var(--fg); text-decoration: underline; }
+
+  /* Progress bar (segmented) */
+  .progress-bar.segmented {
+    display: flex;
+    gap: 4px;
+    height: 8px;
+    margin-bottom: 18px;
+  }
+  .progress-bar.segmented .seg {
+    flex: 1;
+    border-radius: 3px;
+    background: var(--border);
+    opacity: 0.45;
+  }
+  .progress-bar.segmented .seg.seg-easy { background: #6ee7b7; }
+  .progress-bar.segmented .seg.seg-medium { background: #fcd34d; }
+  .progress-bar.segmented .seg.seg-hard { background: #fca5a5; }
+  .progress-bar.segmented .seg.filled { opacity: 1; }
+
+  /* Quiz body */
+  .question-container { animation: fade-in 0.18s ease; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
   .situation {
     color: #4b5563;
-    font-size: 16px;
-    font-weight: normal;
-    margin-bottom: 10px;
+    font-size: 15px;
+    margin-bottom: 8px;
   }
   .transcript {
     font-size: 17px;
@@ -91,7 +127,6 @@
   }
   .transcript .speaker {
     color: var(--muted);
-    font-weight: normal;
     margin-right: 4px;
   }
   .transcript mark {
@@ -99,149 +134,219 @@
     color: #0b6b3a;
     font-weight: 700;
     padding: 0;
-    border-radius: 0;
-    text-decoration: none;
   }
   .instruction {
-    font-size: 15px;
-    font-weight: normal;
+    font-size: 14px;
     color: var(--muted);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
-  .question {
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 24px;
-  }
+
+  /* Options */
   .options {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
-  button.option, button.primary, button.secondary {
-    font: inherit;
+  .options.opts-2 {
+    flex-direction: row;
+  }
+  .options.opts-2 button.option { flex: 1; }
+  @media (max-width: 600px) {
+    .options.opts-2 { flex-direction: column; }
+  }
+  button.option {
     width: 100%;
-    padding: 16px 20px;
     text-align: left;
+    padding: 14px 18px;
+    font-size: 16px;
     background: var(--btn-bg);
-    color: var(--fg);
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.1s ease, border-color 0.1s ease;
+    color: var(--fg);
+    position: relative;
+    transition: background 0.12s, border-color 0.12s;
   }
-  button.option:hover:not(:disabled):not(.correct):not(.wrong):not(.muted-opt) { background: var(--btn-hover); border-color: #cbd5e1; }
-  button.option:active:not(:disabled):not(.correct):not(.wrong):not(.muted-opt) { background: var(--btn-active); }
-  button.option:disabled { cursor: default; }
-  button.option.opt-subjective { border-left: 4px solid #2563eb; background: rgba(37, 99, 235, 0.07); }
-  button.option.opt-subjective:hover:not(.correct):not(.wrong):not(.muted-opt) { background: rgba(37, 99, 235, 0.13); border-color: #2563eb; }
-  button.option.opt-objective { border-left: 4px solid #059669; background: rgba(5, 150, 105, 0.07); }
-  button.option.opt-objective:hover:not(.correct):not(.wrong):not(.muted-opt) { background: rgba(5, 150, 105, 0.13); border-color: #059669; }
-  button.option.opt-assessment { border-left: 4px solid #7c3aed; background: rgba(124, 58, 237, 0.07); }
-  button.option.opt-assessment:hover:not(.correct):not(.wrong):not(.muted-opt) { background: rgba(124, 58, 237, 0.13); border-color: #7c3aed; }
-  button.option.opt-plan { border-left: 4px solid #d97706; background: rgba(217, 119, 6, 0.08); }
-  button.option.opt-plan:hover:not(.correct):not(.wrong):not(.muted-opt) { background: rgba(217, 119, 6, 0.15); border-color: #d97706; }
-  button.option.correct,
-  button.option.correct:hover,
-  button.option.correct:focus,
-  button.option.correct:active {
+  button.option:hover { background: var(--btn-hover); border-color: var(--accent); }
+  button.option:active { background: var(--btn-active); }
+  .key-hint {
+    display: inline-block;
+    margin-right: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* SOAP color coding (4-option questions only) */
+  button.option.opt-subjective { border-left: 4px solid #2563eb; background: rgba(37, 99, 235, 0.05); }
+  button.option.opt-objective  { border-left: 4px solid #059669; background: rgba(5, 150, 105, 0.05); }
+  button.option.opt-assessment { border-left: 4px solid #7c3aed; background: rgba(124, 58, 237, 0.05); }
+  button.option.opt-plan       { border-left: 4px solid #d97706; background: rgba(217, 119, 6, 0.06); }
+
+  /* Feedback state: locked colors, hover ring */
+  button.option.correct, button.option.correct:hover, button.option.correct:focus {
     background: var(--correct-bg);
     border-color: var(--correct-border);
     color: var(--correct-fg);
-    font-weight: 600;
   }
-  button.option.wrong,
-  button.option.wrong:hover,
-  button.option.wrong:focus,
-  button.option.wrong:active {
+  button.option.wrong, button.option.wrong:hover, button.option.wrong:focus {
     background: var(--wrong-bg);
     border-color: var(--wrong-border);
     color: var(--wrong-fg);
-    font-weight: 600;
   }
-  button.option.muted-opt,
-  button.option.muted-opt:hover,
-  button.option.muted-opt:focus,
-  button.option.muted-opt:active {
+  button.option.muted-opt, button.option.muted-opt:hover, button.option.muted-opt:focus {
     opacity: 0.6;
     background: var(--btn-bg);
     border-color: var(--border);
-    color: var(--fg);
   }
-  button.option.correct:hover { box-shadow: 0 0 0 2px #047857; }
-  button.option.wrong:hover { box-shadow: 0 0 0 2px #b91c1c; }
-  button.option.muted-opt:hover { box-shadow: 0 0 0 2px #9ca3af; opacity: 0.78; }
-  button.option.correct:hover::after,
-  button.option.wrong:hover::after,
-  button.option.muted-opt:hover::after {
+  .options:has(button.correct) button.option:hover {
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+  }
+  .options:has(button.correct) button.option.correct:hover { box-shadow: 0 0 0 2px #059669; }
+  .options:has(button.correct) button.option.wrong:hover   { box-shadow: 0 0 0 2px #b91c1c; }
+  .options:has(button.correct) button.option:hover::after {
     content: "\2192 Next";
-    float: right;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 12px;
-    font-weight: 600;
-    opacity: 0.75;
-    margin-left: 12px;
+    color: var(--muted);
   }
+  .feedback-line { font-size: 15px; margin: 8px 0 12px; }
+  .feedback-line.correct-line { color: var(--correct-fg); font-weight: 600; }
+  .next-hint { color: var(--muted); font-size: 13px; }
+
+  /* Skip link */
+  .skip-row { display: flex; justify-content: flex-end; margin-bottom: 16px; }
   button.primary {
     background: var(--accent);
     color: white;
-    border-color: var(--accent);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary:hover { background: var(--accent-hover); }
+  .button-row { display: flex; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+
+  /* Test layout with sidebar */
+  body.has-sidebar main { display: block; }
+  .test-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 28px;
+    align-items: start;
+  }
+  .test-main { min-width: 0; }
+  .test-sidebar {
+    position: sticky;
+    top: 16px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+  .test-sidebar-title {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .soap-node {
+    border-left: 3px solid transparent;
+    padding: 6px 0 6px 10px;
+    margin-bottom: 6px;
+    border-radius: 0 6px 6px 0;
+  }
+  .soap-node.soap-blue   { border-left-color: #2563eb; }
+  .soap-node.soap-green  { border-left-color: #059669; }
+  .soap-node.soap-purple { border-left-color: #7c3aed; }
+  .soap-node.soap-orange { border-left-color: #d97706; }
+  .soap-node .soap-name { font-weight: 700; font-size: 13px; letter-spacing: 0.04em; }
+  .sub-list { list-style: none; padding: 4px 0 0 0; margin: 0; }
+  .sub-node {
+    color: var(--muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .sub-node.hover { background: #fef3c7; color: #1f2937; }
+  .soap-node.hover-parent { background: rgba(0,0,0,0.025); }
+
+  @media (max-width: 900px) {
+    .test-layout { grid-template-columns: 1fr; }
+    .test-sidebar { position: static; }
+  }
+
+  /* Celebration card */
+  .celebration {
     text-align: center;
+    padding: 32px 24px;
+    border-radius: 16px;
+    margin: 12px 0 28px;
+    color: #1a1a1a;
+  }
+  .celebration.tier-outstanding { background: linear-gradient(135deg, #fef3c7, #fdba74); }
+  .celebration.tier-strong      { background: linear-gradient(135deg, #d1fae5, #6ee7b7); }
+  .celebration.tier-solid       { background: linear-gradient(135deg, #dbeafe, #93c5fd); }
+  .celebration.tier-growing     { background: linear-gradient(135deg, #e5e7eb, #cbd5e1); }
+  .celebration.tier-practice    { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+  .celeb-emoji { font-size: 56px; line-height: 1; margin-bottom: 6px; }
+  .celeb-emoji.bob { animation: bob 1.6s ease-in-out infinite; display: inline-block; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .celeb-side { font-size: 22px; margin-bottom: 6px; }
+  .celeb-headline { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .celeb-score { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .celeb-percent { font-size: 14px; color: #4b5563; margin-bottom: 14px; }
+  .celeb-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 8px 0 14px; }
+  .celeb-pill {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 13px;
     font-weight: 600;
   }
-  button.primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
-  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  button.secondary {
-    text-align: center;
-  }
-  button.secondary:hover { background: var(--btn-hover); }
-  .button-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 16px;
-  }
-  .button-row button { flex: 1; min-width: 200px; }
-  a.link, button.link {
-    background: none;
-    border: none;
-    padding: 0;
-    color: var(--muted);
-    font: inherit;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  a.link:hover, button.link:hover { color: var(--fg); }
-  .skip-row {
-    text-align: center;
-    margin-top: 8px;
-  }
+  .celeb-pill.dim { opacity: 0.45; }
+  .celeb-caption { font-size: 14px; color: #374151; }
+
+  /* Per-question recap */
   .results-item {
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: 10px;
+    padding: 14px 16px;
     margin-bottom: 12px;
     background: white;
   }
-  .results-item .category { margin-bottom: 4px; }
+  .results-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .results-meta .category {
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
   .results-options {
     list-style: none;
     padding: 0;
     margin: 8px 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
   }
   .results-options li {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
+    padding: 6px 10px;
     border-radius: 6px;
+    margin-bottom: 4px;
+    border: 1px solid transparent;
     font-size: 14px;
-  }
-  .results-options li.chosen {
-    background: var(--highlight);
-    border-color: var(--highlight-border);
-    font-weight: 600;
   }
   .results-options li.truth {
     background: var(--correct-bg);
@@ -257,1057 +362,6 @@
     color: var(--muted);
     font-style: italic;
   }
-  .summary {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 24px;
-  }
-  .header-bar {
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 0;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-    z-index: 10;
-    font-size: 14px;
-  }
-  .header-bar .player {
-    font-weight: 600;
-  }
-  .header-bar .progress-text {
-    color: var(--muted);
-  }
-  .header-bar .spacer { margin-left: auto; }
-  .pill {
-    display: inline-block;
-    padding: 4px 10px;
-    background: var(--pill-bg);
-    color: var(--pill-fg);
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  .header-bar button.finish {
-    font: inherit;
-    padding: 6px 12px;
-    background: var(--btn-bg);
-    color: var(--fg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-  }
-  .header-bar button.finish:hover { background: var(--btn-hover); }
-  .field {
-    margin-bottom: 16px;
-  }
-  .field label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .field input[type="text"] {
-    width: 100%;
-    padding: 12px 14px;
-    font: inherit;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: white;
-    color: var(--fg);
-  }
-  .field input[type="text"]:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  }
-  .field-inline {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .field-inline input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-  }
-  .step {
-    margin-bottom: 22px;
-  }
-  .step h3 {
-    margin: 0 0 10px;
-    font-size: 15px;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .mode-option {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
-    margin-bottom: 8px;
-    transition: border-color 0.1s ease, background 0.1s ease;
-  }
-  .mode-option:hover { border-color: #cbd5e1; }
-  .mode-option.selected {
-    border-color: var(--accent);
-    background: var(--highlight);
-  }
-  .mode-option input[type="radio"] {
-    margin: 4px 0 0 0;
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-  }
-  .mode-option .mode-label {
-    flex: 1;
-  }
-  .mode-option .mode-name {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 2px;
-  }
-  .mode-option .mode-desc {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  .resume-panel {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-  }
-  .resume-panel h2 {
-    margin-top: 0;
-  }
-  /* Two-author identity accents */
-  body.identity-active-flore_mathieu { border-top: 3px solid #93c5fd; }
-  body.identity-active-frances { border-top: 3px solid #fcd34d; }
-  .identity-resume-flore_mathieu { border-left: 4px solid #93c5fd; }
-  .identity-resume-frances { border-left: 4px solid #fcd34d; }
-  .identity-option-flore_mathieu.selected { border-color: #93c5fd; background: #eff6ff; }
-  .identity-option-frances.selected { border-color: #fcd34d; background: #fffbeb; }
-  .header-bar .player.identity-flore_mathieu { color: #1e40af; }
-  .header-bar .player.identity-frances { color: #92400e; }
-  /* Mathieu-hint pill above Frances's option buttons */
-  .mathieu-hint {
-    margin: 4px 0 10px;
-    font-size: 13px;
-    color: var(--muted);
-    font-style: italic;
-  }
-  .mathieu-hint-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .mathieu-hint strong {
-    font-weight: 600;
-    font-style: normal;
-    color: var(--fg);
-  }
-  .mathieu-note-toggle {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2px 6px;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-  }
-  .mathieu-note-toggle:hover { background: #f3f4f6; }
-  .mathieu-note {
-    margin-top: 6px;
-    padding: 8px 10px;
-    border-left: 3px solid #fcd34d;
-    background: #fffbeb;
-    color: var(--fg);
-    font-style: normal;
-    font-size: 13px;
-    white-space: pre-wrap;
-  }
-  .option.from-mathieu {
-    position: relative;
-    border-left: 3px solid #c4b5fd;
-  }
-  .option.from-mathieu::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #c4b5fd;
-  }
-  .muted.small { font-size: 12px; }
-  .new-session-divider {
-    margin: 32px 0 16px;
-    color: var(--muted);
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .incorrect-row {
-    border: 1px solid var(--wrong-border);
-    background: var(--wrong-bg);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    color: var(--wrong-fg);
-    font-size: 14px;
-  }
-  .incorrect-row .question {
-    color: var(--fg);
-    font-weight: 600;
-    margin-bottom: 6px;
-    font-size: 14px;
-  }
-  .breakdown-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  .breakdown-table td, .breakdown-table th {
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-  }
-  .breakdown-table th { color: var(--muted); font-weight: 500; }
-  .results-meta {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-  .results-meta .category { margin-bottom: 0; }
-  .diff-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 2px 8px;
-    border-radius: 999px;
-  }
-  .diff-easy { background: #d1fae5; color: #065f46; }
-  .diff-medium { background: #fef3c7; color: #92400e; }
-  .diff-hard { background: #fee2e2; color: #991b1b; }
-  .test-breakdown {
-    margin: 12px 0;
-    padding: 12px 14px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  .test-breakdown .band { display: inline-block; margin-right: 14px; }
-  .test-breakdown .short { color: var(--wrong-fg); font-weight: 600; }
-  body.test-mode main,
-  body.has-sidebar main { max-width: 1000px; }
-  body.test-mode .header-bar .progress-text {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--fg);
-    letter-spacing: 0.01em;
-  }
-  body.test-mode .header-bar .diff-tag {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 6px 14px;
-    border-radius: 999px;
-    text-transform: uppercase;
-  }
-  body.test-mode .header-bar .diff-easy { background: #10b981; color: white; }
-  body.test-mode .header-bar .diff-medium { background: #f59e0b; color: white; }
-  body.test-mode .header-bar .diff-hard { background: #ef4444; color: white; }
-  .test-layout {
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-  }
-  .test-main { flex: 1; min-width: 0; }
-  .test-sidebar {
-    width: 280px;
-    flex-shrink: 0;
-    position: sticky;
-    top: 72px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 14px;
-  }
-  .test-sidebar-title {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-    margin-bottom: 14px;
-    font-weight: 600;
-  }
-  .soap-node {
-    border-left: 3px solid var(--border);
-    padding: 4px 0 4px 10px;
-    margin-bottom: 10px;
-    border-radius: 0 4px 4px 0;
-    transition: background 0.1s ease;
-  }
-  .soap-name {
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-  }
-  .soap-blue { border-left-color: #2563eb; }
-  .soap-blue .soap-name { color: #1d4ed8; }
-  .soap-green { border-left-color: #059669; }
-  .soap-green .soap-name { color: #047857; }
-  .soap-purple { border-left-color: #7c3aed; }
-  .soap-purple .soap-name { color: #6d28d9; }
-  .soap-orange { border-left-color: #d97706; }
-  .soap-orange .soap-name { color: #b45309; }
-  .sub-list {
-    list-style: none;
-    padding: 0;
-    margin: 6px 0 0 0;
-  }
-  .sub-node {
-    padding: 3px 8px;
-    color: var(--muted);
-    border-radius: 4px;
-    font-size: 13px;
-    transition: background 0.1s ease, color 0.1s ease;
-  }
-  .sub-node.hover {
-    background: #fef3c7;
-    color: var(--fg);
-    font-weight: 600;
-  }
-  .soap-node.hover-parent { background: #fffbeb; }
-  @media (max-width: 900px) {
-    body.test-mode main,
-    body.has-sidebar main { max-width: 640px; }
-    .test-layout { flex-direction: column; }
-    .test-sidebar {
-      width: 100%;
-      position: static;
-    }
-  }
-  .celebration {
-    border-radius: 16px;
-    padding: 32px 24px;
-    text-align: center;
-    margin: 0 0 24px;
-    border: 1px solid transparent;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  }
-  .celeb-emoji {
-    font-size: 4rem;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .celeb-side {
-    font-size: 1.4rem;
-    letter-spacing: 0.35em;
-    margin-bottom: 6px;
-  }
-  .celeb-headline {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 6px 0 18px;
-    color: #1f2937;
-  }
-  .celeb-score {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1.05;
-    color: #111827;
-  }
-  .celeb-percent {
-    color: #4b5563;
-    font-size: 15px;
-    margin: 4px 0 18px;
-  }
-  .celeb-pills {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .celeb-pill {
-    padding: 8px 16px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 14px;
-    color: white;
-    letter-spacing: 0.02em;
-  }
-  .celeb-pill.diff-easy { background: #10b981; }
-  .celeb-pill.diff-medium { background: #f59e0b; }
-  .celeb-pill.diff-hard { background: #ef4444; }
-  .celeb-pill.dim { opacity: 0.55; }
-  .celeb-caption {
-    font-style: italic;
-    color: #1f2937;
-    font-size: 15px;
-  }
-  .celebration.tier-outstanding {
-    background: linear-gradient(135deg, #fef3c7 0%, #fdba74 100%);
-    border-color: #f59e0b;
-  }
-  .celebration.tier-strong {
-    background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
-    border-color: #10b981;
-  }
-  .celebration.tier-solid {
-    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
-    border-color: #3b82f6;
-  }
-  .celebration.tier-growing {
-    background: linear-gradient(135deg, #e5e7eb 0%, #cbd5e1 100%);
-    border-color: #94a3b8;
-  }
-  .celebration.tier-practice {
-    background: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%);
-    border-color: #a8a29e;
-  }
-  .celebration.tier-neutral {
-    background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
-    border-color: #d1d5db;
-  }
-  @keyframes celeb-bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  .celeb-emoji.bob { animation: celeb-bob 2.4s ease-in-out infinite; }
-
-  /* Keyboard number hint badges on option buttons */
-  button.option { position: relative; padding-left: 48px; min-height: 56px; }
-  .key-hint {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    background: #f3f4f6;
-    color: #6b7280;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    border: 1px solid var(--border);
-  }
-
-  /* "Your previous answer" outline on Back-revisit */
-  button.option.previous-choice {
-    box-shadow: inset 0 0 0 2px #94a3b8;
-  }
-  .prev-tag {
-    float: right;
-    font-size: 11px;
-    color: #6b7280;
-    font-style: italic;
-    margin-left: 12px;
-    pointer-events: none;
-  }
-
-  /* Inline feedback line ("Correct." / "Correct answer: X") */
-  .feedback-line {
-    margin: 14px 0 6px;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  .feedback-line.correct-line { color: #047857; font-weight: 600; }
-  .feedback-line strong { color: var(--fg); font-weight: 700; }
-
-  /* Skipped pill (neutral) */
-  .pill-neutral { background: #f3f4f6; color: #4b5563; }
-
-  /* Delayed fade-in for hint text */
-  .next-hint {
-    opacity: 0;
-    animation: fade-in-hint 0.25s ease-out 0.5s forwards;
-  }
-  @keyframes fade-in-hint { to { opacity: 1; } }
-
-  /* Smooth question-container fade-in on advance */
-  .question-container { opacity: 1; }
-  .question-container.fade-in { animation: q-fade 0.16s ease-out; }
-  @keyframes q-fade {
-    from { opacity: 0; transform: translateY(3px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Segmented progress bar (test mode) */
-  .progress-bar.segmented {
-    height: 6px;
-    background: transparent;
-    border-radius: 0;
-    overflow: visible;
-    display: flex;
-    gap: 3px;
-    margin-bottom: 24px;
-  }
-  .progress-bar.segmented .seg {
-    flex: 1;
-    height: 100%;
-    background: var(--border);
-    border-radius: 3px;
-    transition: background 0.2s ease;
-  }
-  .progress-bar.segmented .seg.filled.seg-easy { background: #10b981; }
-  .progress-bar.segmented .seg.filled.seg-medium { background: #f59e0b; }
-  .progress-bar.segmented .seg.filled.seg-hard { background: #ef4444; }
-
-  /* Modal overlay */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-  }
-  .modal {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 440px;
-    width: 100%;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  }
-  .modal h3 { margin: 0 0 8px; }
-  .modal p { margin: 0 0 18px; color: var(--fg); }
-  .modal .button-row { margin-top: 0; }
-
-  /* Review mode header tag */
-  .header-bar .review-tag {
-    font-weight: 700;
-    color: #6d28d9;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 13px;
-  }
-
-  /* Mode 1: stacked progress bars in header area */
-  .mode1-bars {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  .mode1-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-  }
-  .mode1-bar-label {
-    color: var(--muted);
-    min-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .mode1-bar-track {
-    flex: 1;
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .mode1-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 3px;
-    transition: width 0.2s ease;
-  }
-  .mode1-bar-frac {
-    color: var(--muted);
-    min-width: 64px;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* Question id pill in header (all modes) */
-  .header-bar .question-id-tag {
-    color: var(--muted);
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* ETA, Saved indicator, jump-to button in mode 1 header */
-  .header-bar .eta-text {
-    color: var(--muted);
-    font-size: 12px;
-    font-style: italic;
-  }
-  .header-bar .saved-indicator {
-    color: #15803d;
-    font-size: 12px;
-    background: #ecfdf5;
-    border-radius: 10px;
-    padding: 2px 8px;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
-  }
-  .header-bar .saved-indicator.visible { opacity: 1; }
-  .header-bar .header-mini-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .header-bar .header-mini-btn:hover { background: #f3f4f6; }
-
-  /* Side-by-side 2-option layout */
-  .options.opts-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .options.opts-2 button.option { margin: 0; }
-  @media (max-width: 600px) {
-    .options.opts-2 {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  /* Mode 1 post-answer: selected option gets a solid accent fill that survives hover. */
-  .options.mode1-post button.option.mode1-selected,
-  .options.mode1-post button.option.mode1-selected:hover,
-  .options.mode1-post button.option.mode1-selected:focus,
-  .options.mode1-post button.option.mode1-selected:active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-    font-weight: 600;
-  }
-  /* In post-answer state, keep untouched SOAP-tinted buttons stable on hover. */
-  .options.mode1-post button.option.opt-subjective,
-  .options.mode1-post button.option.opt-subjective:hover { background: rgba(37, 99, 235, 0.07); border-color: #2563eb; }
-  .options.mode1-post button.option.opt-objective,
-  .options.mode1-post button.option.opt-objective:hover { background: rgba(5, 150, 105, 0.07); border-color: #059669; }
-  .options.mode1-post button.option.opt-assessment,
-  .options.mode1-post button.option.opt-assessment:hover { background: rgba(124, 58, 237, 0.07); border-color: #7c3aed; }
-  .options.mode1-post button.option.opt-plan,
-  .options.mode1-post button.option.opt-plan:hover { background: rgba(217, 119, 6, 0.08); border-color: #d97706; }
-  /* Click-to-advance affordance on every option in post-answer state. */
-  .options.mode1-post button.option { cursor: pointer; }
-  .options.mode1-post button.option:hover { box-shadow: 0 0 0 2px #6b7280; }
-  .options.mode1-post button.option.mode1-selected:hover { box-shadow: 0 0 0 2px #1d4ed8; }
-  .options.mode1-post button.option.opt-subjective:hover { box-shadow: 0 0 0 2px #2563eb; }
-  .options.mode1-post button.option.opt-objective:hover { box-shadow: 0 0 0 2px #059669; }
-  .options.mode1-post button.option.opt-assessment:hover { box-shadow: 0 0 0 2px #7c3aed; }
-  .options.mode1-post button.option.opt-plan:hover { box-shadow: 0 0 0 2px #d97706; }
-  .options.mode1-post button.option:hover::after {
-    content: "\2192 Next";
-    float: right;
-    font-size: 12px;
-    font-weight: 600;
-    opacity: 0.75;
-    margin-left: 12px;
-  }
-
-  /* Uncertain toggle button */
-  .uncertain-toggle {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 999px;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
-  }
-  .uncertain-toggle:hover { background: #f9fafb; }
-  .uncertain-toggle.on {
-    border-color: #d97706;
-    color: #b45309;
-    background: #fffbeb;
-  }
-  .mode1-post-row { display: flex; gap: 10px; align-items: center; }
-
-  /* Note section */
-  .note-section {
-    margin-top: 16px;
-    border-top: 1px dashed var(--border);
-    padding-top: 12px;
-  }
-  .note-toggle {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 13px;
-    cursor: pointer;
-    padding: 4px 0;
-    text-decoration: underline;
-  }
-  .note-toggle:hover { color: var(--text); }
-  .note-textarea {
-    display: block;
-    width: 100%;
-    margin-top: 8px;
-    padding: 8px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 14px;
-    resize: vertical;
-    background: #fff;
-    color: var(--text);
-    box-sizing: border-box;
-  }
-  .note-textarea:focus { outline: none; border-color: var(--accent); }
-
-  /* Recent context strip */
-  .recent-strip {
-    background: #f9fafb;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 18px;
-  }
-  .recent-strip-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 12px;
-  }
-  .recent-entry { font-size: 13px; padding: 4px 0; border-top: 1px solid var(--border); }
-  .recent-entry:first-of-type { border-top: none; }
-  .recent-summary {
-    display: flex;
-    gap: 8px;
-    align-items: baseline;
-    cursor: pointer;
-    flex-wrap: wrap;
-  }
-  .recent-summary:hover { background: #f3f4f6; }
-  .recent-id { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .recent-cat { color: var(--text); font-weight: 600; }
-  .recent-sit { color: var(--muted); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .recent-arrow { color: var(--muted); }
-  .recent-ans { font-weight: 600; }
-  .recent-flag { color: #b45309; }
-  .recent-detail { margin-top: 6px; padding-left: 12px; border-left: 2px solid var(--border); }
-
-  /* Export reminder banner */
-  .export-banner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    background: #fffbeb;
-    border-left: 4px solid #f59e0b;
-    padding: 10px 14px;
-    border-radius: 6px;
-    margin-bottom: 18px;
-  }
-  .export-banner-buttons { display: flex; gap: 8px; }
-
-  /* Category transition banner */
-  .category-banner {
-    background: #eff6ff;
-    border-left: 4px solid #2563eb;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-bottom: 14px;
-    color: #1e3a8a;
-    font-size: 14px;
-    animation: cat-banner-anim 2.5s ease-out forwards;
-  }
-  @keyframes cat-banner-anim {
-    0% { opacity: 0; transform: translateY(-4px); }
-    8% { opacity: 1; transform: translateY(0); }
-    80% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-4px); }
-  }
-
-  /* Jump-to panel */
-  .jump-panel {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-  }
-  .jump-panel-title {
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 14px;
-  }
-  .jump-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .jump-section-label {
-    color: var(--muted);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin-top: 8px;
-    margin-bottom: 4px;
-  }
-  .jump-id-input {
-    flex: 1;
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font: inherit;
-    font-size: 14px;
-  }
-  .jump-cat-select {
-    width: 100%;
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font: inherit;
-    background: #fff;
-    color: var(--text);
-  }
-  .jump-chip {
-    font-size: 13px;
-    padding: 4px 12px;
-  }
-
-  /* Welcome-back banner */
-  .welcome-back {
-    position: fixed;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #0f172a;
-    color: #f8fafc;
-    padding: 10px 16px;
-    border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    z-index: 1000;
-    max-width: 92%;
-    font-size: 14px;
-    animation: wb-anim 0.3s ease-out;
-  }
-  @keyframes wb-anim {
-    from { opacity: 0; transform: translate(-50%, -8px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-  }
-  .welcome-back-btn {
-    background: #f8fafc;
-    color: #0f172a;
-    border: none;
-    border-radius: 6px;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-size: 13px;
-  }
-
-  /* Discarded modal */
-  .discarded-modal { max-width: 640px; }
-  .discarded-modal-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  .discarded-list { max-height: 60vh; overflow-y: auto; }
-  .discarded-section-head {
-    margin: 14px 0 6px 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--fg);
-  }
-  .discarded-section-desc { margin: 0 0 8px 0; font-size: 13px; }
-  .discarded-item {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    background: #f9fafb;
-  }
-  .discarded-meta { display: flex; gap: 8px; align-items: baseline; margin-bottom: 4px; }
-  .discarded-id { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 13px; }
-  .discarded-cat { font-weight: 600; }
-  .discarded-sit { color: var(--muted); font-size: 13px; }
-  .discarded-preview { font-size: 13px; margin: 6px 0; color: var(--text); }
-  .discarded-actions { text-align: right; }
-
-  /* Mode 1 results list (editable) */
-  .mode1-results-list { margin-top: 24px; }
-  .mode1-row {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 6px;
-    background: #fff;
-  }
-  .mode1-row.expanded { background: #fafafa; }
-  .mode1-row.destroyed .mode1-row-summary { opacity: 0.65; }
-  .mode1-row-summary {
-    display: flex;
-    gap: 8px;
-    padding: 8px 12px;
-    align-items: baseline;
-    cursor: pointer;
-    flex-wrap: wrap;
-    font-size: 13px;
-  }
-  .mode1-row-summary:hover { background: #f3f4f6; }
-  .mode1-row-id { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 40px; }
-  .mode1-row-cat { font-weight: 600; min-width: 80px; }
-  .mode1-row-diff { font-size: 11px; padding: 2px 6px; }
-  .mode1-row-sit { color: var(--muted); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .mode1-row-arrow { color: var(--muted); }
-  .mode1-row-ans { font-weight: 600; }
-  .mode1-row-ans.row-skipped { color: var(--muted); font-weight: normal; }
-  .mode1-row-ans.row-discarded { color: #b91c1c; font-weight: normal; }
-  .mode1-row-flag { color: #b45309; }
-  .mode1-row-note-dot { color: #6b7280; }
-  .mode1-row-source-note {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--muted);
-    margin: 4px 0 0 12px;
-    line-height: 1.35;
-  }
-  .mode1-row-detail { padding: 0 12px 12px; border-top: 1px solid var(--border); }
-  .mode1-edit-options { margin: 10px 0; }
-  .mode1-edit-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 10px 0;
-    flex-wrap: wrap;
-  }
-
-  /* Session report */
-  .session-report {
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    margin-bottom: 18px;
-  }
-  .session-report h2 { margin-top: 0; }
-  .session-report-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 12px;
-    margin: 12px 0;
-  }
-  .report-stat {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px;
-    text-align: center;
-  }
-  .report-stat-val { font-size: 22px; font-weight: 700; color: var(--text); }
-  .report-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  .session-report .category-line {
-    font-size: 12px;
-    line-height: 1.6;
-  }
-
-  /* Mode 1: discard question UI */
-  .discard-row {
-    text-align: center;
-    margin-top: 12px;
-    min-height: 28px;
-  }
-  .discard-link {
-    background: none;
-    border: none;
-    color: #b91c1c;
-    font-size: 13px;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 4px 8px;
-    font: inherit;
-    font-size: 13px;
-  }
-  .discard-link:hover { color: #7f1d1d; }
-  .discard-confirm-text {
-    color: var(--muted);
-    font-size: 13px;
-    margin-right: 4px;
-  }
-  .discard-confirm-yes,
-  .discard-confirm-cancel {
-    background: none;
-    border: 1px solid;
-    border-radius: 4px;
-    padding: 3px 12px;
-    font-size: 13px;
-    cursor: pointer;
-    margin-left: 6px;
-    font: inherit;
-    font-size: 13px;
-  }
-  .discard-confirm-yes { color: #b91c1c; border-color: #b91c1c; }
-  .discard-confirm-yes:hover { background: #fee2e2; }
-  .discard-confirm-cancel { color: #6b7280; border-color: #d1d5db; }
-  .discard-confirm-cancel:hover { background: #f3f4f6; }
-
-  /* Mobile responsive pass */
-  @media (max-width: 600px) {
-    main { padding: 0 14px 60px; }
-    h1 { font-size: 24px; }
-    .header-bar { gap: 6px; padding: 8px 0; font-size: 13px; }
-    .header-bar .pill { font-size: 12px; padding: 3px 9px; }
-    .header-bar button.finish { padding: 5px 10px; font-size: 12px; }
-    body.test-mode .header-bar .progress-text { font-size: 17px; }
-    body.test-mode .header-bar .diff-tag { font-size: 12px; padding: 4px 10px; }
-    button.option { min-height: 48px; padding-top: 14px; padding-bottom: 14px; }
-    .celebration { padding: 24px 16px; }
-    .celeb-emoji { font-size: 3rem; }
-    .celeb-headline { font-size: 22px; }
-    .celeb-score { font-size: 2.4rem; }
-    .test-sidebar { padding: 12px; font-size: 13px; }
-    .soap-node { margin-bottom: 8px; padding: 3px 0 3px 8px; }
-    .sub-node { padding: 2px 6px; font-size: 12px; }
-  }
-  @media (max-width: 500px) {
-    .key-hint { display: none; }
-    button.option { padding-left: 20px; }
-    .prev-tag { font-size: 10px; }
-  }
-
 </style>
 </head>
 <body>
@@ -1315,6 +369,13 @@
 <script>
 "use strict";
 
+// =====================================================================
+// QUESTIONS
+// ---------------------------------------------------------------------
+// 144 questions total (28 source-discarded). The 116 active questions
+// are sampled from for the Test mode session.
+// Each question carries an optional `discarded: true` flag at the source level.
+// =====================================================================
 const QUESTIONS = [
   {"id": 1, "set": "subsection", "difficulty": "medium", "category": "Chief Complaint vs. History of Present Illness", "situation": "Multiple complaints of unequal weight", "transcript": "Patient: I'm here for my diabetes follow-up, but also **my knee has been killing me**.", "options": ["Chief Complaint", "History of Present Illness"]},
   {"id": 2, "set": "subsection", "difficulty": "medium", "category": "Chief Complaint vs. History of Present Illness", "situation": "Stated reason isn't the real one", "transcript": "Patient: I booked this for a medication refill, but honestly **I've been having chest pain for three days**.", "options": ["Chief Complaint", "History of Present Illness"]},
@@ -1462,76 +523,17 @@ const QUESTIONS = [
   {"id": 144, "set": "soap", "difficulty": "easy", "category": "Plan", "situation": "Procedure planned", "transcript": "Clinician (note): **Incision and drainage of abscess under local anesthesia. Culture wound contents**.", "options": ["Subjective", "Objective", "Assessment", "Plan"]}
 ];
 
-// --- Source-level annotations -------------------------------------------------
-// Per-question fields supported in the QUESTIONS array (all optional):
-//   "discarded": true        - hide this question everywhere, in every mode.
-//   "ground_truth": "<opt>"  - pre-baked truth for this question. Loaded JSON wins.
-//   "note": "<text>"         - author note shown only on Create-ground-truth results.
-const SOURCE_DISCARDED = (function () {
-  const set = Object.create(null);
-  QUESTIONS.forEach(function (q) { if (q && q.discarded === true) set[q.id] = true; });
-  return set;
-})();
-const SOURCE_GROUND_TRUTH = (function () {
-  const map = Object.create(null);
-  QUESTIONS.forEach(function (q) {
-    if (!q || typeof q.ground_truth !== "string") return;
-    if (!Array.isArray(q.options) || q.options.indexOf(q.ground_truth) === -1) {
-      console.error("Source ground_truth for question " + q.id + " (\"" + q.ground_truth + "\") is not in its options. Ignoring.");
-      return;
-    }
-    map[q.id] = q.ground_truth;
-  });
-  return map;
-})();
-const SOURCE_NOTES = (function () {
-  const map = Object.create(null);
-  QUESTIONS.forEach(function (q) {
-    if (q && typeof q.note === "string" && q.note.trim() !== "") map[q.id] = q.note;
-  });
-  return map;
-})();
-function isSourceDiscarded(id) { return !!SOURCE_DISCARDED[id]; }
-function sourceNoteFor(id) { return Object.prototype.hasOwnProperty.call(SOURCE_NOTES, id) ? SOURCE_NOTES[id] : ""; }
-function mergeWithSourceTruth(loaded) {
-  // Loaded ground-truth keys win over source-baked truths.
-  const out = Object.create(null);
-  for (const k in SOURCE_GROUND_TRUTH) {
-    if (Object.prototype.hasOwnProperty.call(SOURCE_GROUND_TRUTH, k)) out[k] = SOURCE_GROUND_TRUTH[k];
-  }
-  if (loaded && typeof loaded === "object") {
-    for (const k in loaded) {
-      if (Object.prototype.hasOwnProperty.call(loaded, k)) out[k] = loaded[k];
-    }
-  }
-  return out;
-}
-(function validateQuestionsOnLoad() {
-  let total = 0, active = 0, sourceDiscarded = 0;
-  QUESTIONS.forEach(function (q) {
-    total++;
-    if (!q || !Array.isArray(q.options) || typeof q.transcript !== "string" || q.transcript === "") {
-      throw new Error("Question " + (q && q.id) + " is missing options or transcript");
-    }
-    if (isSourceDiscarded(q.id)) sourceDiscarded++; else active++;
-  });
-  console.info("Loaded " + total + " questions, " + active + " active, " + sourceDiscarded + " source-discarded.");
-})();
-
 // =====================================================================
 // GROUND TRUTH
 // ---------------------------------------------------------------------
-// This is the canonical answer key for Test mode and the source of
-// hints in Frances's Create ground truth pass.
+// Canonical answer key for Test mode. 116 entries (one per active question).
 //
 // To update:
-//   1. Run Create ground truth mode (any identity).
+//   1. Run Create ground truth mode in two_modes.html.
 //   2. Export the JSON at session end.
 //   3. Copy the `derived_ground_truth` object from the export.
 //   4. Replace the object below with the copied content.
-//   5. Save the file. The app is ready.
-//
-// 116 entries (28 source-discarded ids omitted).
+//   5. Save the file.
 // =====================================================================
 const GROUND_TRUTH = {
   "1": "History of Present Illness",
@@ -1651,58 +653,46 @@ const GROUND_TRUTH = {
   "134": "Subjective",
   "144": "Plan"
 };
-(function validateGroundTruthOnLoad() {
-  let valid = 0, mismatched = 0, unknownIds = 0;
+
+// --- Source-level annotations ------------------------------------------------
+const SOURCE_DISCARDED = (function () {
+  const set = Object.create(null);
+  QUESTIONS.forEach(function (q) { if (q && q.discarded === true) set[q.id] = true; });
+  return set;
+})();
+function isSourceDiscarded(id) { return !!SOURCE_DISCARDED[id]; }
+
+(function validateOnLoad() {
+  let total = 0, active = 0, sourceDiscarded = 0;
+  QUESTIONS.forEach(function (q) {
+    total++;
+    if (!q || !Array.isArray(q.options) || typeof q.transcript !== "string" || q.transcript === "") {
+      throw new Error("Question " + (q && q.id) + " is missing options or transcript");
+    }
+    if (isSourceDiscarded(q.id)) sourceDiscarded++; else active++;
+  });
+  console.info("Loaded " + total + " questions, " + active + " active, " + sourceDiscarded + " source-discarded.");
+  let valid = 0, mismatched = 0, unknown = 0;
   for (const key in GROUND_TRUTH) {
     if (!Object.prototype.hasOwnProperty.call(GROUND_TRUTH, key)) continue;
     const id = +key;
-    if (!Number.isInteger(id)) { console.error("GROUND_TRUTH key is not an integer id: " + key); unknownIds++; continue; }
     const q = QUESTIONS.find(function (x) { return x.id === id; });
-    if (!q) { console.error("GROUND_TRUTH references unknown question id " + id); unknownIds++; continue; }
-    const v = GROUND_TRUTH[key];
-    if (typeof v !== "string" || q.options.indexOf(v) === -1) {
-      console.error("GROUND_TRUTH for question " + id + " (\"" + v + "\") is not in its options.");
+    if (!q) { unknown++; console.error("GROUND_TRUTH unknown id " + key); continue; }
+    if (q.options.indexOf(GROUND_TRUTH[key]) === -1) {
       mismatched++;
+      console.error("GROUND_TRUTH mismatch for id " + key);
       continue;
     }
     valid++;
   }
-  console.info("Ground truth: " + valid + " entries valid, " + mismatched + " mismatched, " + unknownIds + " unknown ids.");
+  console.info("Ground truth: " + valid + " valid, " + mismatched + " mismatched, " + unknown + " unknown.");
 })();
 
-const STORAGE_KEY = "soap-quiz-session-v3";
-const MODE1_STORAGE_KEY = "soap-quiz-mode1-v1"; // legacy, migrated to per-identity keys
-const DESTROYED_STORAGE_KEY = "soap-quiz-destroyed-v1"; // legacy, migrated into mode-1 state
-const IDENTITY_STORAGE_KEY = "mode1_active_identity";
-const IDENTITIES = ["flore_mathieu", "frances"];
-const IDENTITY_LABELS = {
-  flore_mathieu: "Flore & Mathieu",
-  frances: "Frances"
-};
-const IDENTITY_DESCRIPTIONS = {
-  flore_mathieu: "Draft pass \u2014 outputs feed into Frances\u2019s session as hints.",
-  frances: "Authoritative pass \u2014 reads the latest draft, outputs are the real ground truth."
-};
-const IDENTITY_ROLES = {
-  flore_mathieu: "draft",
-  frances: "authoritative"
-};
-function mode1StorageKey(identity) { return "mode1_state_" + identity; }
-const app = document.getElementById("app");
-
-const VALID_MODES = ["practice_no_truth", "test"];
-const MODE_LABELS = {
-  practice_no_truth: "Create ground truth",
-  test: "Test mode"
-};
-const VALID_QUESTION_SETS = ["subsection", "soap", "both"];
-const QUESTION_SET_LABELS = {
-  subsection: "Subsection",
-  soap: "SOAP",
-  both: "Both"
-};
+// --- Constants ---------------------------------------------------------------
 const VALID_DIFFICULTIES = ["easy", "medium", "hard"];
 const DIFFICULTY_LABELS = { easy: "Easy", medium: "Medium", hard: "Hard" };
+const TEST_SEQUENCE_SHAPE = { easy: 2, medium: 2, hard: 1 };
+const TEST_SEQUENCE_ORDER = ["easy", "medium", "hard"];
 
 const SOAP_TREE = [
   { name: "SUBJECTIVE", color: "blue", subs: ["Chief Complaint", "History of Present Illness", "Past Medical History", "Past Surgical History", "Past Obstetric History", "Family History", "Social History", "Allergies", "Current Medications", "Immunizations"] },
@@ -1737,1124 +727,14 @@ const OPTION_TO_SUB = {
   "Appointments": "Appointments"
 };
 
-// Migration: move legacy storage into the new identity-namespaced model.
-// Legacy v3 generic-mode-1 sessions and legacy global destroyed set are both folded
-// into mode1_state_flore_mathieu (the draft pass owner).
-(function migrateLegacyStorage() {
-  try {
-    // 1. Legacy generic v3 holding a mode-1 session.
-    const v3 = localStorage.getItem(STORAGE_KEY);
-    if (v3) {
-      try {
-        const p = JSON.parse(v3);
-        if (p && p.mode === "practice_no_truth") {
-          if (!localStorage.getItem(MODE1_STORAGE_KEY)) {
-            localStorage.setItem(MODE1_STORAGE_KEY, v3);
-          }
-          localStorage.removeItem(STORAGE_KEY);
-        }
-      } catch (e) {}
-    }
-    // 2. Legacy single mode-1 store -> per-identity for flore_mathieu (Mathieu owns it).
-    const legacy = localStorage.getItem(MODE1_STORAGE_KEY);
-    const flmKey = mode1StorageKey("flore_mathieu");
-    if (legacy && !localStorage.getItem(flmKey)) {
-      const parsed = JSON.parse(legacy);
-      if (parsed && typeof parsed === "object") {
-        if (!parsed.destroyed || typeof parsed.destroyed !== "object") parsed.destroyed = {};
-        try {
-          const dRaw = localStorage.getItem(DESTROYED_STORAGE_KEY);
-          if (dRaw) {
-            const d = JSON.parse(dRaw);
-            if (d && typeof d === "object") {
-              Object.keys(d).forEach(function (k) {
-                const id = +k;
-                if (!Number.isInteger(id)) return;
-                const v = d[k];
-                if (v && typeof v === "object" && typeof v.at === "string") parsed.destroyed[id] = { at: v.at };
-                else if (typeof v === "string") parsed.destroyed[id] = { at: v };
-                else if (v === true) parsed.destroyed[id] = { at: new Date().toISOString() };
-              });
-            }
-          }
-        } catch (e) {}
-        parsed.identity = "flore_mathieu";
-        parsed.player = IDENTITY_LABELS.flore_mathieu;
-        localStorage.setItem(flmKey, JSON.stringify(parsed));
-      }
-      localStorage.removeItem(MODE1_STORAGE_KEY);
-      try { localStorage.removeItem(DESTROYED_STORAGE_KEY); } catch (e) {}
-    }
-  } catch (e) { /* ignore */ }
-})();
-
-let genericSavedSession = loadSession();
-let mode1SavedSessions = {
-  flore_mathieu: loadMode1SessionFor("flore_mathieu"),
-  frances: loadMode1SessionFor("frances")
-};
-let mathieuDraftCache = null;
+const app = document.getElementById("app");
 let session = null;
-let screen = "landing";
 let currentIndex = 0;
-
-let pendingMode = null;
-let pendingQuestionSet = "both";
-let pendingDifficulties = ["easy", "medium", "hard"];
-let pendingIdentity = (function () {
-  try {
-    const v = localStorage.getItem(IDENTITY_STORAGE_KEY);
-    if (v && IDENTITIES.indexOf(v) !== -1) return v;
-  } catch (e) {}
-  return "flore_mathieu";
-})();
-let pendingRandomize = false;
 let dismissedFeedbackFor = new Set();
 let suppressNextFade = true;
-let reviewMode = null;
-let pendingDiscardConfirm = false;
-let mode1BarValues = {};
-let _activeQid = null;
-let _activeStartedAt = null;
-let _lastFinalizedDeltaSec = null;
+let screen = "quiz";
 
-// Mode 1 expert-workflow runtime state (in memory, not persisted).
-let jumpPanelOpen = false;
-let expandedResultsId = null;
-let expandedResultsState = null;
-let expandedRecentId = null;
-let noteExpandedFor = new Set();
-let discardedModalOpenFor = null; // identity string when modal is open
-let expandedMathieuNoteFor = null; // qid whose Mathieu-note is expanded inline
-let savedIndicatorTimeout = null;
-let playSessionStartedAt = null;
-let playSessionAnsweredIds = new Set();
-let playSessionDiscardedIds = new Set();
-let playSessionUncertainIds = new Set();
-let playSessionActiveSecondsBase = 0;
-let _noteSaveTimers = {};
-let lastActivityAt = Date.now();
-let welcomeBackShownAt = 0;
-
-function persistActiveIdentity() {
-  try { localStorage.setItem(IDENTITY_STORAGE_KEY, pendingIdentity); } catch (e) {}
-}
-
-function loadSession() {
-  // Test mode (the only non-mode-1 mode) is short and doesn't autosave or resume.
-  // Clean up any stale v3 payload so it doesn't linger.
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-  return null;
-}
-
-function loadMode1SessionFor(identity) {
-  if (IDENTITIES.indexOf(identity) === -1) return null;
-  try {
-    const raw = localStorage.getItem(mode1StorageKey(identity));
-    if (!raw) return null;
-    const s = JSON.parse(raw);
-    if (!s || typeof s !== "object") return null;
-    if (!Array.isArray(s.order)) return null;
-    if (!s.answers || typeof s.answers !== "object") return null;
-    s.identity = identity;
-    s.player = IDENTITY_LABELS[identity];
-    s.mode = "practice_no_truth";
-    s.randomized = false;
-    s.questionSet = VALID_QUESTION_SETS.indexOf(s.questionSet) !== -1 ? s.questionSet : "both";
-    s.playOrder = Array.isArray(s.playOrder) ? s.playOrder.filter(function (x) { return Number.isInteger(x); }) : [];
-    if (Array.isArray(s.difficulties)) {
-      s.difficulties = s.difficulties.filter(function (d) { return VALID_DIFFICULTIES.indexOf(d) !== -1; });
-      if (s.difficulties.length === 0) s.difficulties = VALID_DIFFICULTIES.slice();
-    } else {
-      s.difficulties = VALID_DIFFICULTIES.slice();
-    }
-    if (!s.times || typeof s.times !== "object") s.times = {};
-    if (!s.uncertain || typeof s.uncertain !== "object") s.uncertain = {};
-    if (!s.notes || typeof s.notes !== "object") s.notes = {};
-    if (!s.destroyed || typeof s.destroyed !== "object") s.destroyed = {};
-    if (!Array.isArray(s.recentDurations)) s.recentDurations = [];
-    if (typeof s.lastExportAt !== "string") s.lastExportAt = null;
-    if (typeof s.exportRemindAt !== "number") s.exportRemindAt = null;
-    if (typeof s.hideRecentStrip !== "boolean") s.hideRecentStrip = false;
-    s.groundTruth = null;
-    return s;
-  } catch (e) { return null; }
-}
-
-function refreshMode1SavedSessions() {
-  mode1SavedSessions = {
-    flore_mathieu: loadMode1SessionFor("flore_mathieu"),
-    frances: loadMode1SessionFor("frances")
-  };
-}
-
-function loadMathieuDraft() {
-  return loadMode1SessionFor("flore_mathieu");
-}
-
-function saveSession() {
-  if (!session) return;
-  if (session.mode === "practice_no_truth") {
-    saveMode1Session();
-  } else {
-    saveGenericSession();
-  }
-}
-
-function saveGenericSession() {
-  // Test mode is intentionally not persisted; sessions are short and start fresh each time.
-}
-
-function saveMode1Session() {
-  const identity = session.identity || "flore_mathieu";
-  const toSave = {
-    identity: identity,
-    player: IDENTITY_LABELS[identity] || session.player,
-    mode: "practice_no_truth",
-    questionSet: session.questionSet,
-    difficulties: session.difficulties,
-    order: session.order,
-    playOrder: session.playOrder || [],
-    answers: session.answers,
-    times: session.times || {},
-    startedAt: session.startedAt,
-    uncertain: session.uncertain || {},
-    notes: session.notes || {},
-    destroyed: session.destroyed || {},
-    recentDurations: session.recentDurations || [],
-    lastExportAt: session.lastExportAt || null,
-    exportRemindAt: typeof session.exportRemindAt === "number" ? session.exportRemindAt : null,
-    hideRecentStrip: !!session.hideRecentStrip
-  };
-  localStorage.setItem(mode1StorageKey(identity), JSON.stringify(toSave));
-  mode1SavedSessions[identity] = session;
-}
-
-function clearGenericSession() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-  genericSavedSession = null;
-}
-
-function clearMode1SessionFor(identity) {
-  try { localStorage.removeItem(mode1StorageKey(identity)); } catch (e) {}
-  if (mode1SavedSessions) mode1SavedSessions[identity] = null;
-}
-
-function isDestroyed(id) {
-  // Source-level discards apply in every mode and at every screen.
-  if (isSourceDiscarded(id)) return true;
-  if (!session || session.mode !== "practice_no_truth") return false;
-  if (session.destroyed && session.destroyed[id]) return true;
-  if (session.identity === "frances" && mathieuDraftCache && mathieuDraftCache.destroyed && mathieuDraftCache.destroyed[id]) return true;
-  return false;
-}
-
-function markDestroyed(id) {
-  if (!session || session.mode !== "practice_no_truth") return;
-  if (!session.destroyed) session.destroyed = {};
-  session.destroyed[id] = { at: new Date().toISOString() };
-  saveSession();
-}
-
-function destroyedListForState(state) {
-  if (!state || !state.destroyed) return [];
-  const ids = Object.keys(state.destroyed).map(function (k) { return +k; }).filter(function (id) { return Number.isInteger(id); });
-  ids.sort(function (a, b) {
-    const aAt = state.destroyed[a] && state.destroyed[a].at;
-    const bAt = state.destroyed[b] && state.destroyed[b].at;
-    if (aAt && bAt) return aAt < bAt ? 1 : -1;
-    return a - b;
-  });
-  return ids.map(function (id) {
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    return { id: id, q: q || null, at: (state.destroyed[id] && state.destroyed[id].at) || null };
-  }).filter(function (e) { return e.q; });
-}
-
-function destroyedListWithMeta() {
-  if (session && session.mode === "practice_no_truth") return destroyedListForState(session);
-  return [];
-}
-
-function restoreQuestionInState(state, id) {
-  if (!state || !state.destroyed || !state.destroyed[id]) return false;
-  delete state.destroyed[id];
-  insertIntoMode1OrderForState(state, id);
-  if (state === session) saveSession();
-  else if (state.identity) {
-    localStorage.setItem(mode1StorageKey(state.identity), JSON.stringify({
-      identity: state.identity,
-      player: state.player,
-      mode: "practice_no_truth",
-      questionSet: state.questionSet,
-      difficulties: state.difficulties,
-      order: state.order,
-      playOrder: state.playOrder || [],
-      answers: state.answers,
-      times: state.times || {},
-      startedAt: state.startedAt,
-      uncertain: state.uncertain || {},
-      notes: state.notes || {},
-      destroyed: state.destroyed,
-      recentDurations: state.recentDurations || [],
-      lastExportAt: state.lastExportAt || null,
-      exportRemindAt: typeof state.exportRemindAt === "number" ? state.exportRemindAt : null,
-      hideRecentStrip: !!state.hideRecentStrip
-    }));
-  }
-  return true;
-}
-
-function restoreQuestion(id) {
-  if (!session || session.mode !== "practice_no_truth") return;
-  restoreQuestionInState(session, id);
-  flashSaved();
-}
-
-function clearDestroyedInState(state) {
-  if (!state) return;
-  state.destroyed = {};
-  if (state === session) saveSession();
-  else if (state.identity) {
-    const stored = loadMode1SessionFor(state.identity);
-    if (stored) {
-      stored.destroyed = {};
-      localStorage.setItem(mode1StorageKey(state.identity), JSON.stringify(stored));
-    }
-  }
-}
-
-function countMode1Stats(s) {
-  if (!s) return { answered: 0, destroyed: 0, total: 0, remaining: 0 };
-  // Source-discarded ids never count toward totals, even for cached sessions
-  // built before the annotation was added.
-  const ids = (Array.isArray(s.order) ? s.order : []).filter(function (id) { return !isSourceDiscarded(id); });
-  const destroyedMap = s.destroyed || {};
-  // Frances also treats Mathieu's discards as destroyed even if her own state was loaded before Mathieu re-saved.
-  const extra = (s.identity === "frances" && mathieuDraftCache && mathieuDraftCache.destroyed) ? mathieuDraftCache.destroyed : null;
-  let answered = 0, destroyed = 0;
-  ids.forEach(function (id) {
-    if (destroyedMap[id] || (extra && extra[id])) { destroyed++; return; }
-    const ans = s.answers ? s.answers[id] : undefined;
-    if (ans !== null && ans !== undefined) answered++;
-  });
-  return { answered: answered, destroyed: destroyed, total: ids.length, remaining: Math.max(0, ids.length - answered - destroyed) };
-}
-
-function totalActiveSeconds() {
-  if (!session) return 0;
-  const t = computeCurrentTimes();
-  let sum = 0;
-  for (const k in t) {
-    if (Object.prototype.hasOwnProperty.call(t, k) && typeof t[k] === "number") sum += t[k];
-  }
-  return sum;
-}
-
-function pushRecentDuration(sec) {
-  if (!session || session.mode !== "practice_no_truth") return;
-  if (typeof sec !== "number" || !isFinite(sec) || sec < 0) return;
-  if (!Array.isArray(session.recentDurations)) session.recentDurations = [];
-  session.recentDurations.push(sec);
-  if (session.recentDurations.length > 20) {
-    session.recentDurations = session.recentDurations.slice(-20);
-  }
-}
-
-function computeETA() {
-  if (!session || session.mode !== "practice_no_truth") return null;
-  const arr = session.recentDurations || [];
-  if (arr.length < 5) return null;
-  let sum = 0;
-  arr.forEach(function (v) { sum += v; });
-  const avg = sum / arr.length;
-  let remaining = 0;
-  session.order.forEach(function (id) {
-    if (isDestroyed(id)) return;
-    const a = session.answers[id];
-    if (a === null || a === undefined) remaining++;
-  });
-  const seconds = avg * remaining;
-  return { avg: avg, remaining: remaining, seconds: seconds };
-}
-
-function formatEtaLabel(eta) {
-  if (!eta || eta.seconds <= 0 || eta.remaining === 0) return "Almost done";
-  const mins = Math.round(eta.seconds / 60);
-  if (mins <= 1) return "~1 min left at current pace";
-  if (mins < 60) return "~" + mins + " min left at current pace";
-  const hours = Math.floor(mins / 60);
-  const remM = mins - hours * 60;
-  return "~" + hours + "h " + remM + "m left at current pace";
-}
-
-function flashSaved() {
-  const el = document.getElementById("saved-indicator");
-  if (!el) return;
-  el.classList.add("visible");
-  if (savedIndicatorTimeout) clearTimeout(savedIndicatorTimeout);
-  savedIndicatorTimeout = setTimeout(function () {
-    el.classList.remove("visible");
-  }, 1100);
-}
-
-function isMode1Post() {
-  if (!session || session.mode !== "practice_no_truth") return false;
-  const q = getQuestion(currentIndex);
-  if (!q) return false;
-  const a = session.answers[q.id];
-  return a !== null && a !== undefined;
-}
-
-function findNextMatching(predicate, fromIdx) {
-  if (!session) return -1;
-  const start = typeof fromIdx === "number" ? fromIdx : currentIndex + 1;
-  const n = session.order.length;
-  for (let off = 0; off < n; off++) {
-    const i = ((start + off) % n + n) % n;
-    const id = session.order[i];
-    if (isDestroyed(id)) continue;
-    if (predicate(id)) return i;
-  }
-  return -1;
-}
-
-function jumpToId(id) {
-  if (!session) return false;
-  const idx = session.order.indexOf(id);
-  if (idx === -1) return false;
-  if (isDestroyed(id)) return false;
-  finalizeTimer();
-  currentIndex = idx;
-  pendingDiscardConfirm = false;
-  jumpPanelOpen = false;
-  suppressNextFade = false;
-  render();
-  return true;
-}
-
-function jumpToIndex(idx) {
-  if (!session || idx < 0 || idx >= session.order.length) return false;
-  finalizeTimer();
-  currentIndex = idx;
-  pendingDiscardConfirm = false;
-  jumpPanelOpen = false;
-  suppressNextFade = false;
-  render();
-  return true;
-}
-
-function insertIntoMode1OrderForState(state, id) {
-  if (!state || state.mode !== "practice_no_truth") return;
-  if (state.order.indexOf(id) !== -1) return;
-  const q = QUESTIONS.find(function (x) { return x.id === id; });
-  if (!q) return;
-  if (state.questionSet !== "both" && q.set !== state.questionSet) return;
-  if ((state.difficulties || VALID_DIFFICULTIES).indexOf(q.difficulty) === -1) return;
-  if (state.identity === "frances" && mathieuDraftCache && mathieuDraftCache.destroyed && mathieuDraftCache.destroyed[id]) return;
-  const diffRank = { easy: 0, medium: 1, hard: 2 };
-  const cmpKey = function (qq) {
-    return [diffRank[qq.difficulty] || 0, qq.category, qq.id];
-  };
-  const ckQ = cmpKey(q);
-  let insertAt = state.order.length;
-  for (let i = 0; i < state.order.length; i++) {
-    const oq = QUESTIONS.find(function (x) { return x.id === state.order[i]; });
-    if (!oq) continue;
-    const ck = cmpKey(oq);
-    if (ckQ[0] < ck[0] || (ckQ[0] === ck[0] && (ckQ[1] < ck[1] || (ckQ[1] === ck[1] && ckQ[2] < ck[2])))) {
-      insertAt = i;
-      break;
-    }
-  }
-  state.order.splice(insertAt, 0, id);
-  if (state === session && insertAt <= currentIndex) currentIndex++;
-}
-
-function insertIntoMode1Order(id) {
-  insertIntoMode1OrderForState(session, id);
-}
-
-function recentAnsweredIds(excludingId) {
-  if (!session || !session.playOrder) return [];
-  const out = [];
-  for (let i = session.playOrder.length - 1; i >= 0 && out.length < 3; i--) {
-    const id = session.playOrder[i];
-    if (id === excludingId) continue;
-    if (isDestroyed(id)) continue;
-    const a = session.answers[id];
-    if (a === null || a === undefined) continue;
-    out.push(id);
-  }
-  return out;
-}
-
-function setUncertain(id, val) {
-  if (!session || session.mode !== "practice_no_truth") return;
-  if (!session.uncertain) session.uncertain = {};
-  if (val) {
-    session.uncertain[id] = true;
-    playSessionUncertainIds.add(id);
-  } else {
-    delete session.uncertain[id];
-  }
-  saveSession();
-  flashSaved();
-}
-
-function saveNote(id, text) {
-  if (!session || session.mode !== "practice_no_truth") return;
-  if (!session.notes) session.notes = {};
-  if (text === "" || text === null || text === undefined) delete session.notes[id];
-  else session.notes[id] = String(text);
-  saveSession();
-  flashSaved();
-}
-
-function scheduleNoteSave(id, text) {
-  if (_noteSaveTimers[id]) clearTimeout(_noteSaveTimers[id]);
-  _noteSaveTimers[id] = setTimeout(function () {
-    saveNote(id, text);
-    delete _noteSaveTimers[id];
-  }, 500);
-}
-
-function initPlaySession() {
-  playSessionStartedAt = new Date().toISOString();
-  playSessionAnsweredIds = new Set();
-  playSessionDiscardedIds = new Set();
-  playSessionUncertainIds = new Set();
-  playSessionActiveSecondsBase = totalActiveSeconds();
-}
-
-function ensureExportRemindAt() {
-  if (!session || session.mode !== "practice_no_truth") return;
-  if (typeof session.exportRemindAt !== "number" || session.exportRemindAt <= 0) {
-    session.exportRemindAt = totalActiveSeconds() + 30 * 60;
-  }
-}
-
-function shouldShowExportReminder() {
-  if (!session || session.mode !== "practice_no_truth") return false;
-  ensureExportRemindAt();
-  return totalActiveSeconds() >= session.exportRemindAt;
-}
-
-function snoozeExportReminder() {
-  if (!session) return;
-  session.exportRemindAt = totalActiveSeconds() + 30 * 60;
-  saveSession();
-}
-
-function buildSessionReport(endedAt) {
-  const ended = endedAt || new Date().toISOString();
-  const startedAt = playSessionStartedAt || (session && session.startedAt) || ended;
-  const activeSec = Math.max(0, totalActiveSeconds() - playSessionActiveSecondsBase);
-  const answered = Array.from(playSessionAnsweredIds);
-  const avg = answered.length > 0 ? activeSec / answered.length : 0;
-  const diffCounts = { easy: 0, medium: 0, hard: 0 };
-  const catCounts = {};
-  let uncertainCount = 0;
-  let discardedWithNotes = 0;
-  answered.forEach(function (id) {
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    if (!q) return;
-    if (diffCounts[q.difficulty] !== undefined) diffCounts[q.difficulty]++;
-    catCounts[q.category] = (catCounts[q.category] || 0) + 1;
-    if (session && session.uncertain && session.uncertain[id]) uncertainCount++;
-  });
-  playSessionDiscardedIds.forEach(function (id) {
-    if (session && session.notes && typeof session.notes[id] === "string" && session.notes[id].trim() !== "") {
-      discardedWithNotes++;
-    }
-  });
-  return {
-    player: session ? session.player : null,
-    mode: "practice_no_truth",
-    play_started_at: startedAt,
-    play_ended_at: ended,
-    questions_answered: answered.length,
-    questions_discarded: playSessionDiscardedIds.size,
-    active_time_seconds: Math.round(activeSec * 10) / 10,
-    avg_seconds_per_question: Math.round(avg * 10) / 10,
-    by_difficulty: diffCounts,
-    by_category: catCounts,
-    uncertain_flagged: uncertainCount,
-    discarded_with_notes: discardedWithNotes
-  };
-}
-
-function downloadSessionReport() {
-  const payload = buildSessionReport(new Date().toISOString());
-  if (session && session.identity) payload.identity = session.identity;
-  const who = (session && session.identity === "frances") ? "frances" : "mathieu";
-  const filename = "session-report-" + who + "-" + todayDateStr() + ".json";
-  triggerDownload(JSON.stringify(payload, null, 2), filename, "application/json");
-}
-
-function trackUserActivity() {
-  const now = Date.now();
-  const gap = now - lastActivityAt;
-  lastActivityAt = now;
-  if (gap > 5 * 60 * 1000 && session && session.mode === "practice_no_truth" && screen === "quiz") {
-    if (now - welcomeBackShownAt > 30 * 1000) {
-      showWelcomeBack();
-      welcomeBackShownAt = now;
-    }
-  }
-}
-
-function showWelcomeBack() {
-  const existing = document.querySelector(".welcome-back");
-  if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
-  const q = getQuestion(currentIndex);
-  if (!q) return;
-  const banner = document.createElement("div");
-  banner.className = "welcome-back";
-  const heading = document.createElement("strong");
-  heading.textContent = "Welcome back.";
-  const detail = document.createElement("span");
-  detail.textContent = " You were on #" + q.id + " \u2014 " + (DIFFICULTY_LABELS[q.difficulty] || q.difficulty) + ", " + q.category + ".";
-  banner.appendChild(heading);
-  banner.appendChild(detail);
-  const btn = document.createElement("button");
-  btn.className = "welcome-back-btn";
-  btn.textContent = "Continue";
-  btn.addEventListener("click", function () { if (banner.parentNode) banner.parentNode.removeChild(banner); });
-  banner.appendChild(btn);
-  document.body.appendChild(banner);
-  setTimeout(function () {
-    if (banner.parentNode) banner.parentNode.removeChild(banner);
-  }, 4000);
-}
-
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-  }
-  return a;
-}
-
-const TEST_SEQUENCE_SHAPE = { easy: 2, medium: 2, hard: 1 };
-const TEST_SEQUENCE_ORDER = ["easy", "medium", "hard"];
-
-function poolForBand(questionSet, gt, difficulty) {
-  return QUESTIONS.filter(function (q) {
-    if (questionSet !== "both" && q.set !== questionSet) return false;
-    if (q.difficulty !== difficulty) return false;
-    if (!gt || !Object.prototype.hasOwnProperty.call(gt, q.id)) return false;
-    if (isDestroyed(q.id)) return false;
-    return true;
-  });
-}
-
-function buildMode1Order(questionSet, difficulties, extraExclude) {
-  const diffRank = { easy: 0, medium: 1, hard: 2 };
-  const filtered = QUESTIONS.filter(function (q) {
-    if (isSourceDiscarded(q.id)) return false;
-    if (questionSet !== "both" && q.set !== questionSet) return false;
-    if (difficulties.indexOf(q.difficulty) === -1) return false;
-    if (extraExclude && extraExclude[q.id]) return false;
-    return true;
-  });
-  filtered.sort(function (a, b) {
-    if (diffRank[a.difficulty] !== diffRank[b.difficulty]) return diffRank[a.difficulty] - diffRank[b.difficulty];
-    if (a.category !== b.category) return a.category < b.category ? -1 : 1;
-    return a.id - b.id;
-  });
-  return filtered.map(function (q) { return q.id; });
-}
-
-function countTestBandAvailability(questionSet, gt) {
-  const out = {};
-  VALID_DIFFICULTIES.forEach(function (d) {
-    const target = TEST_SEQUENCE_SHAPE[d];
-    const available = gt ? poolForBand(questionSet, gt, d).length : 0;
-    out[d] = { target: target, available: available, used: Math.min(target, available) };
-  });
-  return out;
-}
-
-function buildTestSequence(questionSet, gt) {
-  const seq = [];
-  TEST_SEQUENCE_ORDER.forEach(function (d) {
-    const pool = poolForBand(questionSet, gt, d);
-    const ids = shuffle(pool.map(function (q) { return q.id; }));
-    Array.prototype.push.apply(seq, ids.slice(0, TEST_SEQUENCE_SHAPE[d]));
-  });
-  return seq;
-}
-
-function startSession(opts) {
-  const mode = opts.mode;
-  const identity = (IDENTITIES.indexOf(opts.identity) !== -1) ? opts.identity : "flore_mathieu";
-  const name = (mode === "practice_no_truth") ? IDENTITY_LABELS[identity] : (opts.player || IDENTITY_LABELS[identity]);
-  const questionSet = VALID_QUESTION_SETS.indexOf(opts.questionSet) !== -1 ? opts.questionSet : "both";
-  const inputDiffs = Array.isArray(opts.difficulties) ? opts.difficulties.filter(function (d) { return VALID_DIFFICULTIES.indexOf(d) !== -1; }) : [];
-  const difficulties = inputDiffs.length > 0 ? inputDiffs : VALID_DIFFICULTIES.slice();
-  // Effective truth = source-baked truths overridden by the user-loaded JSON.
-  // Mode 1 doesn't use truth; only test mode consults it.
-  const groundTruth = (mode === "test" && opts.groundTruth)
-    ? mergeWithSourceTruth(opts.groundTruth)
-    : null;
-  // Frances reads Mathieu's latest draft as soft hints + hides his discards.
-  if (mode === "practice_no_truth" && identity === "frances") {
-    mathieuDraftCache = loadMathieuDraft();
-  } else {
-    mathieuDraftCache = null;
-  }
-  let order;
-  let randomized;
-  if (mode === "practice_no_truth") {
-    const extraExclude = (identity === "frances" && mathieuDraftCache && mathieuDraftCache.destroyed) ? mathieuDraftCache.destroyed : null;
-    order = buildMode1Order(questionSet, difficulties, extraExclude);
-    // Frances may opt to shuffle the order; Mathieu's order is forced.
-    if (identity === "frances" && opts.randomize) {
-      order = shuffle(order.slice());
-      randomized = true;
-    } else {
-      randomized = false;
-    }
-  } else if (mode === "test" && groundTruth) {
-    order = buildTestSequence(questionSet, groundTruth);
-    randomized = false;
-  } else {
-    let ids = QUESTIONS.filter(function (q) {
-      if (questionSet !== "both" && q.set !== questionSet) return false;
-      if (difficulties.indexOf(q.difficulty) === -1) return false;
-      return true;
-    }).map(function (q) { return q.id; });
-    randomized = !!opts.randomize;
-    order = randomized ? shuffle(ids) : ids;
-  }
-  session = {
-    identity: (mode === "practice_no_truth") ? identity : null,
-    player: name,
-    mode: mode,
-    questionSet: questionSet,
-    difficulties: difficulties,
-    randomized: randomized,
-    order: order,
-    playOrder: [],
-    answers: {},
-    times: {},
-    startedAt: new Date().toISOString(),
-    groundTruth: groundTruth
-  };
-  if (mode === "practice_no_truth") {
-    session.uncertain = {};
-    session.notes = {};
-    session.destroyed = {};
-    session.recentDurations = [];
-    session.lastExportAt = null;
-    session.exportRemindAt = 30 * 60;
-    session.hideRecentStrip = false;
-    mode1SavedSessions[identity] = session;
-  } else {
-    genericSavedSession = session;
-  }
-  saveSession();
-  currentIndex = 0;
-  dismissedFeedbackFor = new Set();
-  reviewMode = null;
-  suppressNextFade = true;
-  pendingDiscardConfirm = false;
-  mode1BarValues = {};
-  expandedResultsId = null;
-  expandedRecentId = null;
-  noteExpandedFor = new Set();
-  jumpPanelOpen = false;
-  discardedModalOpenFor = null;
-  expandedMathieuNoteFor = null;
-  _activeQid = null;
-  _activeStartedAt = null;
-  _lastFinalizedDeltaSec = null;
-  lastActivityAt = Date.now();
-  welcomeBackShownAt = Date.now();
-  initPlaySession();
-  screen = "quiz";
-  render();
-}
-
-function getQuestion(idx) {
-  if (!session || idx < 0 || idx >= session.order.length) return null;
-  const id = session.order[idx];
-  return QUESTIONS.find(function (q) { return q.id === id; });
-}
-
-function firstUnansweredIndex() {
-  if (!session) return 0;
-  for (let i = 0; i < session.order.length; i++) {
-    const id = session.order[i];
-    if (isDestroyed(id)) continue;
-    if (!(id in session.answers)) return i;
-  }
-  return session.order.length;
-}
-
-function firstPendingIndexMode1() {
-  if (!session) return 0;
-  for (let i = 0; i < session.order.length; i++) {
-    const id = session.order[i];
-    if (isDestroyed(id)) continue;
-    const has = Object.prototype.hasOwnProperty.call(session.answers, id);
-    if (!has || session.answers[id] === null) return i;
-  }
-  return session.order.length;
-}
-
-function nextLiveIndex(from, dir) {
-  if (!session) return dir > 0 ? 0 : -1;
-  let i = from;
-  while (i >= 0 && i < session.order.length) {
-    if (!isDestroyed(session.order[i])) return i;
-    i += dir;
-  }
-  return dir > 0 ? session.order.length : -1;
-}
-
-function isFeedbackActive() {
-  if (!session || !session.groundTruth) return false;
-  const q = getQuestion(currentIndex);
-  if (!q) return false;
-  if (dismissedFeedbackFor.has(q.id)) return false;
-  if (!Object.prototype.hasOwnProperty.call(session.groundTruth, q.id)) return false;
-  const ans = session.answers[q.id];
-  return ans !== undefined && ans !== null;
-}
-
-function computeScore() {
-  if (!session || !session.groundTruth) return null;
-  let correct = 0;
-  let answeredWithTruth = 0;
-  for (const idStr in session.answers) {
-    if (!Object.prototype.hasOwnProperty.call(session.answers, idStr)) continue;
-    const id = +idStr;
-    if (!Object.prototype.hasOwnProperty.call(session.groundTruth, id)) continue;
-    const ans = session.answers[id];
-    if (ans === null || ans === undefined) continue;
-    answeredWithTruth++;
-    if (ans === session.groundTruth[id]) correct++;
-  }
-  const percent = answeredWithTruth > 0 ? Math.round((correct / answeredWithTruth) * 1000) / 10 : 0;
-  return { correct: correct, answeredWithTruth: answeredWithTruth, percent: percent };
-}
-
-function slugify(name) {
-  return (name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "player";
-}
-
-function todayDateStr() {
-  const d = new Date();
-  const m = function (n) { return String(n).padStart(2, "0"); };
-  return d.getFullYear() + "-" + m(d.getMonth() + 1) + "-" + m(d.getDate());
-}
-
-function buildExportPayload(finishedAt) {
-  const gt = session.groundTruth;
-  const sessionIds = new Set(session.order);
-  const playOrder = (session.playOrder || []).filter(function (id) { return sessionIds.has(id); });
-  const seen = new Set(playOrder);
-  const remaining = QUESTIONS.map(function (q) { return q.id; })
-    .filter(function (id) { return sessionIds.has(id) && !seen.has(id); })
-    .sort(function (a, b) { return a - b; });
-  const orderedIds = playOrder.concat(remaining);
-  const answers = orderedIds.map(function (id) {
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    const has = Object.prototype.hasOwnProperty.call(session.answers, id);
-    const ans = has ? session.answers[id] : null;
-    const correct = gt && Object.prototype.hasOwnProperty.call(gt, id) ? gt[id] : null;
-    let isCorrect = null;
-    if (correct !== null && ans !== null && ans !== undefined) isCorrect = ans === correct;
-    const rawTime = session.times && typeof session.times[id] === "number" ? session.times[id] : null;
-    const timeSec = rawTime !== null ? Math.round(rawTime * 10) / 10 : null;
-    return {
-      id: q.id,
-      set: q.set,
-      difficulty: q.difficulty,
-      category: q.category,
-      situation: q.situation,
-      transcript: q.transcript,
-      options: q.options.slice(),
-      answer: ans === undefined ? null : ans,
-      correct_answer: correct,
-      is_correct: isCorrect,
-      time_seconds: timeSec
-    };
-  }).filter(function (item) { return item.answer !== null; });
-  const score = computeScore();
-  const payload = {
-    player: session.player,
-    mode: session.mode,
-    question_set: session.questionSet || "both",
-    difficulties: (session.difficulties || VALID_DIFFICULTIES).slice(),
-    started_at: session.startedAt,
-    finished_at: finishedAt,
-    randomized: !!session.randomized,
-    ground_truth_loaded: !!gt,
-    play_order: playOrder.slice(),
-    score: gt && score ? { correct: score.correct, answered_with_truth: score.answeredWithTruth, percent: score.percent } : null,
-    answers: answers
-  };
-  if (session.mode === "test") {
-    payload.test_sequence = { easy: TEST_SEQUENCE_SHAPE.easy, medium: TEST_SEQUENCE_SHAPE.medium, hard: TEST_SEQUENCE_SHAPE.hard };
-  }
-  return payload;
-}
-
-function computeCurrentTimes() {
-  if (!session) return {};
-  const result = Object.assign({}, session.times || {});
-  if (_activeQid !== null && _activeStartedAt !== null) {
-    const elapsed = (Date.now() - _activeStartedAt) / 1000;
-    result[_activeQid] = (result[_activeQid] || 0) + elapsed;
-  }
-  return result;
-}
-
-function buildMode1ExportPayload(exportedAt) {
-  const qs = session.questionSet || "both";
-  const diffs = (session.difficulties || VALID_DIFFICULTIES).slice();
-  const scopeQs = QUESTIONS.filter(function (q) {
-    if (qs !== "both" && q.set !== qs) return false;
-    if (diffs.indexOf(q.difficulty) === -1) return false;
-    // Source-discarded questions are excluded from the export entirely, except
-    // when the user already had an answer recorded before the source-level discard
-    // was added; in that case we keep the row with a source_discarded marker.
-    if (isSourceDiscarded(q.id)) {
-      const hadAns = session.answers && session.answers[q.id] !== undefined && session.answers[q.id] !== null;
-      if (!hadAns) return false;
-    }
-    return true;
-  });
-  const scopeIds = scopeQs.map(function (q) { return q.id; });
-  const sortedIds = scopeIds.slice().sort(function (a, b) { return a - b; });
-  const times = computeCurrentTimes();
-
-  let answeredCount = 0, destroyedCount = 0;
-  const answers = sortedIds.map(function (id) {
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    const sourceDiscarded = isSourceDiscarded(id);
-    const destroyed = isDestroyed(id);
-    const hasAns = Object.prototype.hasOwnProperty.call(session.answers, id);
-    const ans = hasAns ? session.answers[id] : null;
-    // Source-discarded rows don't count toward stats; they're carried for reference.
-    if (!sourceDiscarded) {
-      if (destroyed) destroyedCount++;
-      else if (ans !== null && ans !== undefined) answeredCount++;
-    }
-    const rawTime = typeof times[id] === "number" ? times[id] : null;
-    const timeSec = rawTime !== null ? Math.round(rawTime * 10) / 10 : null;
-    const isUncertain = !destroyed && !!(session.uncertain && session.uncertain[id]);
-    const note = (session.notes && typeof session.notes[id] === "string") ? session.notes[id] : "";
-    const sourceNote = sourceNoteFor(id);
-    const item = {
-      id: q.id,
-      set: q.set,
-      difficulty: q.difficulty,
-      category: q.category,
-      situation: q.situation,
-      transcript: q.transcript,
-      options: q.options.slice(),
-      answer: destroyed ? null : (ans === undefined ? null : ans),
-      correct_answer: null,
-      destroyed: !!destroyed,
-      uncertain: isUncertain,
-      note: note
-    };
-    if (sourceNote) item.source_note = sourceNote;
-    if (sourceDiscarded) item.source_discarded = true;
-    if (destroyed) {
-      const meta = (session.destroyed && session.destroyed[id])
-        || (session.identity === "frances" && mathieuDraftCache && mathieuDraftCache.destroyed && mathieuDraftCache.destroyed[id])
-        || null;
-      item.destroyed_at = meta ? meta.at : null;
-    } else if (timeSec !== null) {
-      item.time_seconds = timeSec;
-    }
-    return item;
-  });
-
-  const total = scopeIds.length;
-  const remaining = Math.max(0, total - answeredCount - destroyedCount);
-
-  const derived = {};
-  answers.forEach(function (a) {
-    if (a.source_discarded) return;
-    if (!a.destroyed && a.answer !== null) derived[a.id] = a.answer;
-  });
-
-  const scopeSet = new Set(scopeIds);
-  const playOrder = (session.playOrder || []).filter(function (id) { return scopeSet.has(id); });
-  const identity = session.identity || "flore_mathieu";
-
-  return {
-    player: session.player,
-    identity: identity,
-    role: IDENTITY_ROLES[identity] || "draft",
-    mode: "practice_no_truth",
-    started_at: session.startedAt,
-    exported_at: exportedAt,
-    previous_exported_at: session.lastExportAt || null,
-    question_set: qs,
-    difficulties: diffs,
-    stats: { total: total, answered: answeredCount, destroyed: destroyedCount, remaining: remaining },
-    derived_ground_truth: derived,
-    play_order: playOrder,
-    answers: answers
-  };
-}
-
-function mode1ExportFilename(identity) {
-  const date = todayDateStr();
-  if (identity === "frances") return "ground-truth-frances-" + date + ".json";
-  return "draft-ground-truth-mathieu-" + date + ".json";
-}
-
-function downloadJSON() {
-  if (!session) return;
-  if (session.mode === "practice_no_truth") {
-    const nowIso = new Date().toISOString();
-    const payload = buildMode1ExportPayload(nowIso);
-    const filename = mode1ExportFilename(session.identity || "flore_mathieu");
-    triggerDownload(JSON.stringify(payload, null, 2), filename, "application/json");
-    session.lastExportAt = nowIso;
-    session.exportRemindAt = totalActiveSeconds() + 30 * 60;
-    saveSession();
-    flashSaved();
-    return;
-  }
-  const finishedAt = new Date().toISOString();
-  const payload = buildExportPayload(finishedAt);
-  const filename = "quiz-results-" + slugify(session.player) + "-" + todayDateStr() + ".json";
-  triggerDownload(JSON.stringify(payload, null, 2), filename, "application/json");
-}
-
-function triggerExportCurrentState() {
-  if (!session || session.mode !== "practice_no_truth") return;
-  finalizeTimer();
-  const nowIso = new Date().toISOString();
-  const payload = buildMode1ExportPayload(nowIso);
-  const filename = "quiz-mode1-" + slugify(session.player) + "-" + todayDateStr() + ".json";
-  triggerDownload(JSON.stringify(payload, null, 2), filename, "application/json");
-  session.lastExportAt = nowIso;
-  session.exportRemindAt = totalActiveSeconds() + 30 * 60;
-  saveSession();
-  flashSaved();
-  if (screen === "quiz") render();
-}
-
-function triggerEndSession() {
-  if (!session) return;
-  finalizeTimer();
-  screen = "results";
-  pendingDiscardConfirm = false;
-  render();
-}
-
-function triggerDownload(content, filename, mime) {
-  const blob = new Blob([content], { type: mime + ";charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(function () { URL.revokeObjectURL(url); }, 0);
-}
-
-function ensureTimingActive(qid) {
-  if (_activeQid === qid && _activeStartedAt !== null) return;
-  if (_activeQid !== null && _activeStartedAt !== null) finalizeTimer();
-  _activeQid = qid;
-  _activeStartedAt = Date.now();
-}
-
-function ensureTimingStopped(qid) {
-  if (_activeQid === qid && _activeStartedAt !== null) finalizeTimer();
-}
-
-function finalizeTimer() {
-  if (_activeQid === null || _activeStartedAt === null) return;
-  const elapsed = (Date.now() - _activeStartedAt) / 1000;
-  if (session) {
-    if (!session.times) session.times = {};
-    session.times[_activeQid] = (session.times[_activeQid] || 0) + elapsed;
-    saveSession();
-  }
-  _lastFinalizedDeltaSec = elapsed;
-  _activeQid = null;
-  _activeStartedAt = null;
-}
-
-function back() {
-  if (!session || currentIndex === 0) return;
-  const target = nextLiveIndex(currentIndex - 1, -1);
-  if (target < 0) return;
-  currentIndex = target;
-  const q = getQuestion(currentIndex);
-  if (q) dismissedFeedbackFor.add(q.id);
-  pendingDiscardConfirm = false;
-  suppressNextFade = true;
-  render();
-}
-
-function countAnsweredAndSkipped() {
-  let answered = 0, skipped = 0;
-  if (!session) return { answered: 0, skipped: 0, total: 0 };
-  session.order.forEach(function (id) {
-    if (!Object.prototype.hasOwnProperty.call(session.answers, id)) return;
-    if (session.answers[id] === null) skipped++;
-    else answered++;
-  });
-  return { answered: answered, skipped: skipped, total: session.order.length };
-}
-
-function showModal(opts) {
-  const overlay = el("div", { class: "modal-overlay" });
-  const close = function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); };
-  overlay.addEventListener("click", function (e) { if (e.target === overlay) close(); });
-  const modal = el("div", { class: "modal" });
-  if (opts.title) modal.appendChild(el("h3", { text: opts.title }));
-  if (opts.message) modal.appendChild(el("p", { text: opts.message }));
-  const row = el("div", { class: "button-row" });
-  row.appendChild(el("button", {
-    class: "secondary",
-    text: opts.cancelLabel || "Cancel",
-    onclick: function () { close(); if (typeof opts.onCancel === "function") opts.onCancel(); }
-  }));
-  row.appendChild(el("button", {
-    class: "primary",
-    text: opts.confirmLabel || "Confirm",
-    onclick: function () { close(); if (typeof opts.onConfirm === "function") opts.onConfirm(); }
-  }));
-  modal.appendChild(row);
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
-}
-
-function triggerFinish() {
-  const counts = countAnsweredAndSkipped();
-  const allReached = (counts.answered + counts.skipped) >= counts.total;
-  const doFinish = function () {
-    finalizeTimer();
-    screen = "results";
-    render();
-    downloadJSON();
-  };
-  if (allReached) {
-    doFinish();
-    return;
-  }
-  showModal({
-    title: "Finish now?",
-    message: "You've answered " + counts.answered + " of " + counts.total + " questions" + (counts.skipped > 0 ? ", " + counts.skipped + " skipped" : "") + ".",
-    confirmLabel: "Finish",
-    cancelLabel: "Cancel",
-    onConfirm: doFinish
-  });
-}
-
+// --- Helpers -----------------------------------------------------------------
 function el(tag, attrs, children) {
   const node = document.createElement(tag);
   if (attrs) {
@@ -2896,33 +776,120 @@ function renderTranscript(text) {
   return frag;
 }
 
-function render() {
-  if (screen !== "quiz") finalizeTimer();
-  // Clean up render-managed overlays (transient showModal overlays manage their own lifecycle).
-  const stale = document.querySelectorAll(".modal-overlay .discarded-modal");
-  for (let i = 0; i < stale.length; i++) {
-    const ov = stale[i].closest(".modal-overlay");
-    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
   }
-  app.innerHTML = "";
-  const inTestQuiz = screen === "quiz" && session && session.mode === "test";
-  const inSidebarQuiz = screen === "quiz" && session && (session.mode === "test" || session.mode === "practice_no_truth");
-  document.body.classList.toggle("test-mode", inTestQuiz);
-  document.body.classList.toggle("has-sidebar", inSidebarQuiz);
-  // Identity tint: prefer active session identity in mode 1; otherwise pending identity on landing.
-  let activeIdentity = null;
-  if (session && session.identity) activeIdentity = session.identity;
-  else if (screen === "landing") activeIdentity = pendingIdentity;
-  IDENTITIES.forEach(function (id) {
-    document.body.classList.toggle("identity-active-" + id, activeIdentity === id);
-  });
-  if (screen === "landing") renderLanding();
-  else if (screen === "quiz") renderQuiz();
-  else if (screen === "review") renderReview();
-  else if (screen === "results") renderResults();
-  window.scrollTo(0, 0);
+  return a;
 }
 
+// --- Test sequence -----------------------------------------------------------
+function poolForBand(difficulty) {
+  return QUESTIONS.filter(function (q) {
+    if (isSourceDiscarded(q.id)) return false;
+    if (q.difficulty !== difficulty) return false;
+    if (!Object.prototype.hasOwnProperty.call(GROUND_TRUTH, q.id)) return false;
+    return true;
+  });
+}
+
+function buildTestSequence() {
+  const seq = [];
+  TEST_SEQUENCE_ORDER.forEach(function (d) {
+    const pool = poolForBand(d);
+    const ids = shuffle(pool.map(function (q) { return q.id; }));
+    Array.prototype.push.apply(seq, ids.slice(0, TEST_SEQUENCE_SHAPE[d]));
+  });
+  return seq;
+}
+
+// --- Session management ------------------------------------------------------
+function startNewSession() {
+  const order = buildTestSequence();
+  session = {
+    mode: "test",
+    order: order,
+    playOrder: [],
+    answers: {},
+    groundTruth: GROUND_TRUTH,
+    startedAt: new Date().toISOString()
+  };
+  currentIndex = 0;
+  dismissedFeedbackFor = new Set();
+  suppressNextFade = true;
+  screen = "quiz";
+  render();
+}
+
+function getQuestion(idx) {
+  if (!session || idx < 0 || idx >= session.order.length) return null;
+  const id = session.order[idx];
+  return QUESTIONS.find(function (q) { return q.id === id; });
+}
+
+function isFeedbackActive() {
+  if (!session || !session.groundTruth) return false;
+  const q = getQuestion(currentIndex);
+  if (!q) return false;
+  if (dismissedFeedbackFor.has(q.id)) return false;
+  if (!Object.prototype.hasOwnProperty.call(session.groundTruth, q.id)) return false;
+  const ans = session.answers[q.id];
+  return ans !== undefined && ans !== null;
+}
+
+function computeScore() {
+  if (!session || !session.groundTruth) return null;
+  let correct = 0, answeredWithTruth = 0;
+  for (const id in session.answers) {
+    const ans = session.answers[id];
+    if (ans === null || ans === undefined) continue;
+    if (!Object.prototype.hasOwnProperty.call(session.groundTruth, id)) continue;
+    answeredWithTruth++;
+    if (ans === session.groundTruth[id]) correct++;
+  }
+  const percent = answeredWithTruth > 0 ? Math.round((correct / answeredWithTruth) * 1000) / 10 : 0;
+  return { correct: correct, answeredWithTruth: answeredWithTruth, percent: percent };
+}
+
+function selectAnswer(id, choice) {
+  if (!session) return;
+  session.answers[id] = choice;
+  if (choice === null) {
+    advance();
+    return;
+  }
+  const hasGT = session.groundTruth && Object.prototype.hasOwnProperty.call(session.groundTruth, id);
+  if (hasGT) {
+    render();
+  } else {
+    advance();
+  }
+}
+
+function advance() {
+  if (!session) return;
+  const q = getQuestion(currentIndex);
+  if (q) dismissedFeedbackFor.add(q.id);
+  currentIndex++;
+  suppressNextFade = false;
+  if (currentIndex >= session.order.length) {
+    screen = "results";
+  }
+  render();
+}
+
+function back() {
+  if (!session || currentIndex === 0) return;
+  currentIndex--;
+  suppressNextFade = true;
+  const prev = getQuestion(currentIndex);
+  if (prev) dismissedFeedbackFor.delete(prev.id);
+  render();
+}
+
+// --- Sidebar -----------------------------------------------------------------
 function renderSidebar(currentSet) {
   const sidebar = el("aside", { class: "test-sidebar" });
   sidebar.appendChild(el("div", { class: "test-sidebar-title", text: "SOAP framework" }));
@@ -2964,695 +931,62 @@ function clearSidebarHighlight() {
   for (let i = 0; i < tops.length; i++) tops[i].classList.remove("hover-parent");
 }
 
-function renderLanding() {
-  app.appendChild(el("h1", { text: "SOAP Classification Quiz" }));
-  app.appendChild(el("p", { text: "Click through 144 medical-documentation edge cases. Pick the bucket that feels right." }));
-
-  let hasResume = false;
-  IDENTITIES.forEach(function (id) {
-    if (mode1SavedSessions[id]) { renderMode1ResumePanel(id); hasResume = true; }
-  });
-  if (hasResume) {
-    app.appendChild(el("div", { class: "new-session-divider", text: "Or start a new session" }));
-  }
-
-  renderOnboarding();
-}
-
-function renderMode1ResumePanel(identity) {
-  const ms = mode1SavedSessions[identity];
-  if (!ms) return;
-  // Frances's stats should reflect Mathieu's discards too.
-  let mathieuForStats = null;
-  if (identity === "frances") {
-    mathieuForStats = mathieuDraftCache || loadMathieuDraft();
-  }
-  const statsCtx = { destroyed: ms.destroyed || {} };
-  const ids = ms.order || [];
-  const extraDiscards = (identity === "frances" && mathieuForStats && mathieuForStats.destroyed) ? mathieuForStats.destroyed : null;
-  let answered = 0, destroyedN = 0;
-  ids.forEach(function (id) {
-    if (statsCtx.destroyed[id] || (extraDiscards && extraDiscards[id])) { destroyedN++; return; }
-    const ans = ms.answers ? ms.answers[id] : undefined;
-    if (ans !== null && ans !== undefined) answered++;
-  });
-  const remaining = Math.max(0, ids.length - answered - destroyedN);
-
-  const panel = el("div", { class: "resume-panel identity-resume identity-resume-" + identity });
-  panel.appendChild(el("h2", { text: "Resume authoring \u2014 " + IDENTITY_LABELS[identity] }));
-  panel.appendChild(el("p", {
-    class: "muted",
-    text: answered + " answered, " + destroyedN + " discarded, " + remaining + " remaining (out of " + ids.length + ")"
-  }));
-  if (identity === "frances" && !mathieuForStats) {
-    panel.appendChild(el("p", { class: "muted small", text: "No draft from Flore & Mathieu found. Frances normally builds on top of that draft." }));
-  }
-
-  const row = el("div", { class: "button-row" });
-  row.appendChild(el("button", {
-    class: "primary",
-    text: "Resume",
-    onclick: function () {
-      pendingIdentity = identity;
-      persistActiveIdentity();
-      session = mode1SavedSessions[identity];
-      if (identity === "frances") {
-        mathieuDraftCache = loadMathieuDraft();
-      } else {
-        mathieuDraftCache = null;
-      }
-      currentIndex = firstPendingIndexMode1();
-      if (currentIndex >= session.order.length) screen = "results";
-      else screen = "quiz";
-      dismissedFeedbackFor = new Set();
-      pendingDiscardConfirm = false;
-      mode1BarValues = {};
-      expandedRecentId = null;
-      noteExpandedFor = new Set();
-      jumpPanelOpen = false;
-      discardedModalOpenFor = null;
-      expandedMathieuNoteFor = null;
-      suppressNextFade = true;
-      lastActivityAt = Date.now();
-      welcomeBackShownAt = Date.now();
-      initPlaySession();
-      render();
-    }
-  }));
-  row.appendChild(el("button", {
-    class: "secondary",
-    text: "Start over",
-    onclick: function () {
-      if (!confirm("Start over for " + IDENTITY_LABELS[identity] + "? This clears their answers, notes, and discards.")) return;
-      clearMode1SessionFor(identity);
-      pendingDiscardConfirm = false;
-      mode1BarValues = {};
-      render();
-    }
-  }));
-  panel.appendChild(row);
-
-  const ownDestroyed = Object.keys(ms.destroyed || {}).length;
-  const sourceDiscardedCount = Object.keys(SOURCE_DISCARDED).length;
-  if (ownDestroyed > 0 || sourceDiscardedCount > 0) {
-    const moreRow = el("div", { class: "button-row" });
-    let label;
-    if (ownDestroyed > 0 && sourceDiscardedCount > 0) {
-      label = "View discarded (" + ownDestroyed + " session \u00b7 " + sourceDiscardedCount + " source)";
-    } else if (ownDestroyed > 0) {
-      label = "View discarded (" + ownDestroyed + ")";
-    } else {
-      label = "View discarded in source (" + sourceDiscardedCount + ")";
-    }
-    moreRow.appendChild(el("button", {
-      class: "link",
-      text: label,
-      onclick: function () { discardedModalOpenFor = identity; render(); }
-    }));
-    panel.appendChild(moreRow);
-  }
-
-  app.appendChild(panel);
-
-  if (discardedModalOpenFor === identity) renderDiscardedModalFor(identity);
-}
-
-function renderDiscardedModalFor(identity) {
-  const state = (session && session.mode === "practice_no_truth" && session.identity === identity) ? session : mode1SavedSessions[identity];
-  if (!state) return;
-  const overlay = el("div", { class: "modal-overlay" });
-  overlay.addEventListener("click", function (e) {
-    if (e.target === overlay) { discardedModalOpenFor = null; render(); }
-  });
-  const modal = el("div", { class: "modal discarded-modal" });
-  const head = el("div", { class: "discarded-modal-head" });
-  head.appendChild(el("h3", { text: "Discarded questions \u2014 " + IDENTITY_LABELS[identity] }));
-  head.appendChild(el("button", {
-    class: "link",
-    text: "Close",
-    onclick: function () { discardedModalOpenFor = null; render(); }
-  }));
-  modal.appendChild(head);
-
-  function buildItemRow(q, opts) {
-    const row = el("div", { class: "discarded-item" });
-    const meta = el("div", { class: "discarded-meta" });
-    meta.appendChild(el("span", { class: "discarded-id", text: "#" + q.id }));
-    meta.appendChild(el("span", { class: "discarded-cat", text: q.category }));
-    meta.appendChild(el("span", { class: "discarded-diff diff-tag diff-" + q.difficulty, text: DIFFICULTY_LABELS[q.difficulty] }));
-    row.appendChild(meta);
-    row.appendChild(el("div", { class: "discarded-sit", text: q.situation }));
-    const preview = q.transcript.replace(/\*\*/g, "");
-    const short = preview.length > 140 ? preview.slice(0, 137) + "\u2026" : preview;
-    row.appendChild(el("div", { class: "discarded-preview", text: short }));
-    if (opts && opts.restorable) {
-      const actions = el("div", { class: "discarded-actions" });
-      actions.appendChild(el("button", {
-        class: "secondary",
-        text: "Restore",
-        onclick: function () {
-          restoreQuestionInState(state, q.id);
-          flashSaved();
-          render();
-        }
-      }));
-      row.appendChild(actions);
-    } else if (opts && opts.sourceLocked) {
-      const actions = el("div", { class: "discarded-actions" });
-      actions.appendChild(el("span", { class: "muted small", text: "Discarded in source \u2014 not restorable from the UI." }));
-      row.appendChild(actions);
-    }
-    return row;
-  }
-
-  const sessionItems = destroyedListForState(state);
-  const sourceItems = Object.keys(SOURCE_DISCARDED)
-    .map(function (k) { return +k; })
-    .map(function (id) { return { id: id, q: QUESTIONS.find(function (x) { return x.id === id; }) }; })
-    .filter(function (e) { return e.q; })
-    .sort(function (a, b) { return a.id - b.id; });
-
-  if (sessionItems.length === 0 && sourceItems.length === 0) {
-    modal.appendChild(el("p", { class: "muted", text: "Nothing discarded." }));
-  }
-
-  if (sessionItems.length > 0) {
-    modal.appendChild(el("h4", { class: "discarded-section-head", text: "Discarded in this session" }));
-    const list = el("div", { class: "discarded-list" });
-    sessionItems.forEach(function (entry) { list.appendChild(buildItemRow(entry.q, { restorable: true })); });
-    modal.appendChild(list);
-  }
-
-  if (sourceItems.length > 0) {
-    modal.appendChild(el("h4", { class: "discarded-section-head", text: "Discarded in source (" + sourceItems.length + ")" }));
-    modal.appendChild(el("p", { class: "muted small discarded-section-desc", text: "These questions are pre-marked as discarded in the question bank itself. They are hidden from every mode and every user." }));
-    const list = el("div", { class: "discarded-list" });
-    sourceItems.forEach(function (entry) { list.appendChild(buildItemRow(entry.q, { sourceLocked: true })); });
-    modal.appendChild(list);
-  }
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
-}
-
-function renderOnboarding() {
-  const modes = [
-    { id: "practice_no_truth", name: "Create ground truth", desc: "Author the ground truth for the question bank. No scoring, no feedback \u2014 just your considered answers, autosaved." },
-    { id: "test", name: "Test mode", desc: "Take a short scored test against a loaded ground truth file." }
-  ];
-
-  const step1 = el("div", { class: "step" });
-  step1.appendChild(el("h3", { text: "1. How do you want to play?" }));
-  modes.forEach(function (m) {
-    const wrap = el("label", { class: "mode-option" + (pendingMode === m.id ? " selected" : ""), for: "mode-" + m.id });
-    const radio = el("input", { type: "radio", name: "mode", id: "mode-" + m.id, value: m.id });
-    if (pendingMode === m.id) radio.checked = true;
-    radio.addEventListener("change", function () {
-      pendingMode = m.id;
-      render();
-    });
-    wrap.appendChild(radio);
-    const inner = el("span", { class: "mode-label" });
-    inner.appendChild(el("span", { class: "mode-name", text: m.name }));
-    inner.appendChild(el("span", { class: "mode-desc", text: m.desc }));
-    wrap.appendChild(inner);
-    step1.appendChild(wrap);
-  });
-  app.appendChild(step1);
-
-  if (pendingMode === null) return;
-  const isTestMode = pendingMode === "test";
-  const isAuthoring = pendingMode === "practice_no_truth";
-  let stepNum = 2;
-
-  // Step 2 (authoring only): identity selector.
-  if (isAuthoring) {
-    const stepIdentity = el("div", { class: "step" });
-    stepIdentity.appendChild(el("h3", { text: stepNum + ". Who's playing?" }));
-    IDENTITIES.forEach(function (idKey) {
-      const wrap = el("label", { class: "mode-option identity-option identity-option-" + idKey + (pendingIdentity === idKey ? " selected" : ""), for: "identity-" + idKey });
-      const radio = el("input", { type: "radio", name: "identity", id: "identity-" + idKey, value: idKey });
-      if (pendingIdentity === idKey) radio.checked = true;
-      radio.addEventListener("change", function () {
-        pendingIdentity = idKey;
-        persistActiveIdentity();
-        render();
-      });
-      wrap.appendChild(radio);
-      const inner = el("span", { class: "mode-label" });
-      inner.appendChild(el("span", { class: "mode-name", text: IDENTITY_LABELS[idKey] }));
-      inner.appendChild(el("span", { class: "mode-desc", text: IDENTITY_DESCRIPTIONS[idKey] }));
-      wrap.appendChild(inner);
-      stepIdentity.appendChild(wrap);
-    });
-    if (pendingIdentity === "frances" && !mode1SavedSessions.flore_mathieu) {
-      stepIdentity.appendChild(el("p", { class: "muted small", text: "No draft from Flore & Mathieu found yet. Frances normally builds on top of that draft. You can still proceed and author from scratch." }));
-    }
-    app.appendChild(stepIdentity);
-    stepNum++;
-  }
-
-  const stepQS = el("div", { class: "step" });
-  stepQS.appendChild(el("h3", { text: stepNum + ". Question set" }));
-  const qsOptions = [
-    { id: "subsection", name: "Subsection mode", desc: "Subsection questions only" },
-    { id: "soap", name: "SOAP mode", desc: "SOAP questions only" },
-    { id: "both", name: "Both", desc: "Default \u2014 subsection and SOAP" }
-  ];
-  qsOptions.forEach(function (qs) {
-    const wrap = el("label", { class: "mode-option" + (pendingQuestionSet === qs.id ? " selected" : ""), for: "qs-" + qs.id });
-    const radio = el("input", { type: "radio", name: "question-set", id: "qs-" + qs.id, value: qs.id });
-    if (pendingQuestionSet === qs.id) radio.checked = true;
-    radio.addEventListener("change", function () {
-      pendingQuestionSet = qs.id;
-      render();
-    });
-    wrap.appendChild(radio);
-    const inner = el("span", { class: "mode-label" });
-    inner.appendChild(el("span", { class: "mode-name", text: qs.name }));
-    inner.appendChild(el("span", { class: "mode-desc", text: qs.desc }));
-    wrap.appendChild(inner);
-    stepQS.appendChild(wrap);
-  });
-  app.appendChild(stepQS);
-  stepNum++;
-
-  if (isAuthoring) {
-    const stepDiff = el("div", { class: "step" });
-    stepDiff.appendChild(el("h3", { text: stepNum + ". Difficulty" }));
-    VALID_DIFFICULTIES.forEach(function (d) {
-      const row = el("div", { class: "field-inline" });
-      const cb = el("input", { type: "checkbox", id: "diff-" + d });
-      cb.checked = pendingDifficulties.indexOf(d) !== -1;
-      cb.addEventListener("change", function () {
-        const has = pendingDifficulties.indexOf(d) !== -1;
-        if (cb.checked && !has) pendingDifficulties.push(d);
-        else if (!cb.checked && has) {
-          if (pendingDifficulties.length <= 1) {
-            cb.checked = true;
-            return;
-          }
-          pendingDifficulties = pendingDifficulties.filter(function (x) { return x !== d; });
-        }
-      });
-      row.appendChild(cb);
-      row.appendChild(el("label", { for: "diff-" + d, text: DIFFICULTY_LABELS[d] }));
-      stepDiff.appendChild(row);
-    });
-    stepDiff.appendChild(el("p", { class: "muted", text: "At least one must remain checked." }));
-    app.appendChild(stepDiff);
-    stepNum++;
-  }
-
-  // Randomize toggle: Create-ground-truth mode for Frances only.
-  // Mathieu's order is forced (difficulty -> category -> id) to keep the draft pass efficient.
-  const showRandomize = isAuthoring && pendingIdentity === "frances";
-  if (showRandomize) {
-    const stepRand = el("div", { class: "step" });
-    stepRand.appendChild(el("h3", { text: stepNum + ". Question order" }));
-    const row = el("div", { class: "field-inline" });
-    const cb = el("input", { type: "checkbox", id: "randomize" });
-    cb.checked = !!pendingRandomize;
-    cb.addEventListener("change", function () {
-      pendingRandomize = cb.checked;
-    });
-    row.appendChild(cb);
-    row.appendChild(el("label", { for: "randomize", text: "Shuffle question order" }));
-    stepRand.appendChild(row);
-    stepRand.appendChild(el("p", { class: "muted small", text: "If unchecked, Frances follows the same fixed authoring order as Flore & Mathieu." }));
-    app.appendChild(stepRand);
-    stepNum++;
-  }
-
-  if (isAuthoring) {
-    if (pendingIdentity === "flore_mathieu") {
-      app.appendChild(el("p", { class: "muted", text: "Authoring presents questions in a fixed order optimized for ground truth work: easy first, then medium, then hard \u2014 grouped by category within each difficulty band." }));
-    } else if (!pendingRandomize) {
-      app.appendChild(el("p", { class: "muted", text: "Frances will see the same fixed authoring order \u2014 easy first, then medium, then hard, grouped by category within each difficulty band." }));
-    } else {
-      app.appendChild(el("p", { class: "muted", text: "Frances will see questions in a shuffled order." }));
-    }
-  } else {
-    const counts = countTestBandAvailability(pendingQuestionSet, GROUND_TRUTH);
-    let total = 0;
-    VALID_DIFFICULTIES.forEach(function (d) { total += counts[d].used; });
-    const breakdown = el("div", { class: "test-breakdown" });
-    const bands = el("div");
-    VALID_DIFFICULTIES.forEach(function (d) {
-      const b = el("span", { class: "band" + (counts[d].available < counts[d].target ? " short" : "") });
-      b.appendChild(el("strong", { text: DIFFICULTY_LABELS[d] + ": " }));
-      b.appendChild(document.createTextNode(counts[d].used + " / " + counts[d].target + (counts[d].available < counts[d].target ? " (only " + counts[d].available + " in pool)" : "")));
-      bands.appendChild(b);
-    });
-    breakdown.appendChild(bands);
-    const shapeParts = VALID_DIFFICULTIES.map(function (d) { return TEST_SEQUENCE_SHAPE[d] + " " + d; }).join(" \u00b7 ");
-    breakdown.appendChild(el("p", { class: "muted", text: "Test will be " + total + " question" + (total === 1 ? "" : "s") + " (target shape: " + shapeParts + "). Pool: questions matching the chosen set with a ground-truth entry." }));
-    app.appendChild(breakdown);
-  }
-
-  const startLabel = isAuthoring ? ("Start authoring as " + IDENTITY_LABELS[pendingIdentity]) : "Start test";
-  const startBtn = el("button", {
-    class: "primary",
-    text: startLabel,
-    onclick: function () {
-      const overwriting = isAuthoring ? mode1SavedSessions[pendingIdentity] : genericSavedSession;
-      if (overwriting) {
-        if (!confirm("Starting a new session will erase saved progress for " + overwriting.player + ". Continue?")) return;
-      }
-      const difficulties = isTestMode ? VALID_DIFFICULTIES.slice() : pendingDifficulties.slice();
-      const playerName = isAuthoring ? IDENTITY_LABELS[pendingIdentity] : "Test player";
-      const wantRandom = isAuthoring && pendingIdentity === "frances" && !!pendingRandomize;
-      startSession({
-        identity: isAuthoring ? pendingIdentity : null,
-        player: playerName,
-        mode: pendingMode,
-        questionSet: pendingQuestionSet,
-        difficulties: difficulties,
-        randomize: wantRandom,
-        groundTruth: isTestMode ? GROUND_TRUTH : null
-      });
-    }
-  });
-
-  const startRow = el("div", { class: "button-row" });
-  startRow.appendChild(startBtn);
-  app.appendChild(startRow);
-}
-
+// --- Header ------------------------------------------------------------------
 function renderHeaderBar() {
   const bar = el("div", { class: "header-bar" });
 
   if (currentIndex > 0) {
-    bar.appendChild(el("button", {
-      class: "link",
-      text: "\u2190 Back",
-      onclick: back
-    }));
+    bar.appendChild(el("button", { class: "link", text: "\u2190 Back", onclick: back }));
   }
 
-  const authorLabel = (session.mode === "practice_no_truth") ? "Author: " : "Player: ";
-  const playerSpan = el("span", { class: "player", text: authorLabel + session.player });
-  if (session.identity) playerSpan.classList.add("identity-" + session.identity);
-  bar.appendChild(playerSpan);
   bar.appendChild(el("span", { class: "progress-text", text: "Q " + (currentIndex + 1) + " / " + session.order.length }));
-  const qHere = getQuestion(currentIndex);
-  if (qHere) {
-    bar.appendChild(el("span", { class: "question-id-tag", text: "#" + qHere.id }));
+
+  const q = getQuestion(currentIndex);
+  if (q) {
+    bar.appendChild(el("span", { class: "diff-tag diff-" + q.difficulty, text: DIFFICULTY_LABELS[q.difficulty] }));
   }
 
-  if (session.mode === "test") {
-    if (qHere) bar.appendChild(el("span", { class: "diff-tag diff-" + qHere.difficulty, text: DIFFICULTY_LABELS[qHere.difficulty] }));
-  }
-
-  if (session.groundTruth) {
-    const score = computeScore();
-    bar.appendChild(el("span", { class: "pill", text: "Score: " + score.correct + " / " + score.answeredWithTruth }));
-  }
-
-  let skipped = 0;
-  session.order.forEach(function (id) { if (session.answers[id] === null) skipped++; });
-  bar.appendChild(el("span", { class: "pill pill-neutral", text: "Skipped: " + skipped }));
-
-  if (session.mode === "practice_no_truth") {
-    const eta = computeETA();
-    if (eta) {
-      bar.appendChild(el("span", { class: "eta-text", text: formatEtaLabel(eta) }));
-    }
-    const savedInd = el("span", { class: "saved-indicator", text: "Saved \u2713" });
-    savedInd.id = "saved-indicator";
-    bar.appendChild(savedInd);
-    bar.appendChild(el("button", {
-      class: "header-mini-btn",
-      text: "Jump to\u2026",
-      onclick: function () { jumpPanelOpen = !jumpPanelOpen; render(); }
-    }));
-    bar.appendChild(el("button", {
-      class: "finish spacer",
-      text: "Export current state",
-      onclick: triggerExportCurrentState
-    }));
-    bar.appendChild(el("button", {
-      class: "finish",
-      text: "End session",
-      onclick: triggerEndSession
-    }));
-  } else {
-    bar.appendChild(el("button", {
-      class: "finish spacer",
-      text: "Finish & export",
-      onclick: triggerFinish
-    }));
+  const score = computeScore();
+  if (score) {
+    const pill = el("span", { class: "pill spacer", text: "Score: " + score.correct + " / " + score.answeredWithTruth });
+    bar.appendChild(pill);
   }
 
   return bar;
-}
-
-function renderJumpPanel() {
-  const panel = el("div", { class: "jump-panel" });
-  panel.appendChild(el("div", { class: "jump-panel-title", text: "Jump to\u2026" }));
-
-  const inputRow = el("div", { class: "jump-row" });
-  const input = el("input", { type: "number", placeholder: "Question id", class: "jump-id-input", min: "1" });
-  input.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      const id = parseInt(input.value, 10);
-      if (!isNaN(id)) jumpToId(id);
-    }
-  });
-  inputRow.appendChild(input);
-  inputRow.appendChild(el("button", {
-    class: "secondary",
-    text: "Go",
-    onclick: function () {
-      const id = parseInt(input.value, 10);
-      if (!isNaN(id)) jumpToId(id);
-    }
-  }));
-  panel.appendChild(inputRow);
-
-  panel.appendChild(el("div", { class: "jump-section-label", text: "Next unanswered by difficulty" }));
-  const diffRow = el("div", { class: "jump-row" });
-  VALID_DIFFICULTIES.forEach(function (d) {
-    diffRow.appendChild(el("button", {
-      class: "secondary jump-chip",
-      text: DIFFICULTY_LABELS[d],
-      onclick: function () {
-        const i = findNextMatching(function (id) {
-          const q = QUESTIONS.find(function (x) { return x.id === id; });
-          if (!q || q.difficulty !== d) return false;
-          const a = session.answers[id];
-          return a === null || a === undefined;
-        });
-        if (i >= 0) jumpToIndex(i);
-      }
-    }));
-  });
-  panel.appendChild(diffRow);
-
-  panel.appendChild(el("div", { class: "jump-section-label", text: "Next unanswered by category" }));
-  const cats = {};
-  session.order.forEach(function (id) {
-    if (isDestroyed(id)) return;
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    if (q) cats[q.category] = true;
-  });
-  const catNames = Object.keys(cats).sort();
-  const catSelect = el("select", { class: "jump-cat-select" });
-  catSelect.appendChild(el("option", { value: "", text: "Choose category\u2026" }));
-  catNames.forEach(function (c) {
-    catSelect.appendChild(el("option", { value: c, text: c }));
-  });
-  catSelect.addEventListener("change", function () {
-    const c = catSelect.value;
-    if (!c) return;
-    const i = findNextMatching(function (id) {
-      const q = QUESTIONS.find(function (x) { return x.id === id; });
-      if (!q || q.category !== c) return false;
-      const a = session.answers[id];
-      return a === null || a === undefined;
-    });
-    if (i >= 0) jumpToIndex(i);
-  });
-  panel.appendChild(catSelect);
-
-  const moreRow = el("div", { class: "jump-row" });
-  moreRow.appendChild(el("button", {
-    class: "secondary jump-chip",
-    text: "Next uncertain",
-    onclick: function () {
-      const i = findNextMatching(function (id) {
-        return !!(session.uncertain && session.uncertain[id]);
-      });
-      if (i >= 0) jumpToIndex(i);
-    }
-  }));
-  moreRow.appendChild(el("button", {
-    class: "secondary jump-chip",
-    text: "Next with note",
-    onclick: function () {
-      const i = findNextMatching(function (id) {
-        return !!(session.notes && typeof session.notes[id] === "string" && session.notes[id].trim() !== "");
-      });
-      if (i >= 0) jumpToIndex(i);
-    }
-  }));
-  moreRow.appendChild(el("button", {
-    class: "link",
-    text: "Close",
-    onclick: function () { jumpPanelOpen = false; render(); }
-  }));
-  panel.appendChild(moreRow);
-
-  return panel;
-}
-
-function renderMode1ProgressBars(q) {
-  const qs = session.questionSet || "both";
-  const diffs = (session.difficulties || VALID_DIFFICULTIES);
-  const scopeQs = QUESTIONS.filter(function (x) {
-    if (isSourceDiscarded(x.id)) return false;
-    if (qs !== "both" && x.set !== qs) return false;
-    if (diffs.indexOf(x.difficulty) === -1) return false;
-    return true;
-  });
-
-  const isFilled = function (id) {
-    if (isDestroyed(id)) return true;
-    const a = session.answers[id];
-    return a !== null && a !== undefined;
-  };
-
-  const overallTotal = scopeQs.length;
-  const overallFilled = scopeQs.filter(function (x) { return isFilled(x.id); }).length;
-
-  const curDiff = q.difficulty;
-  const diffQs = scopeQs.filter(function (x) { return x.difficulty === curDiff; });
-  const diffTotal = diffQs.length;
-  const diffFilled = diffQs.filter(function (x) { return isFilled(x.id); }).length;
-
-  const curCat = q.category;
-  const catQs = diffQs.filter(function (x) { return x.category === curCat; });
-  const catTotal = catQs.length;
-  const catFilled = catQs.filter(function (x) { return isFilled(x.id); }).length;
-
-  const wrap = el("div", { class: "mode1-bars" });
-  function mkBar(label, filled, total, key) {
-    const pct = total > 0 ? Math.min(100, (filled / total) * 100) : 0;
-    const initial = typeof mode1BarValues[key] === "number" ? mode1BarValues[key] : 0;
-    const row = el("div", { class: "mode1-bar" });
-    row.appendChild(el("span", { class: "mode1-bar-label", text: label }));
-    const track = el("div", { class: "mode1-bar-track" });
-    const fill = el("div", { class: "mode1-bar-fill", style: "width: " + initial + "%" });
-    track.appendChild(fill);
-    row.appendChild(track);
-    row.appendChild(el("span", { class: "mode1-bar-frac", text: filled + " / " + total }));
-    requestAnimationFrame(function () { fill.style.width = pct + "%"; });
-    mode1BarValues[key] = pct;
-    return row;
-  }
-  wrap.appendChild(mkBar("Overall", overallFilled, overallTotal, "overall"));
-  wrap.appendChild(mkBar(DIFFICULTY_LABELS[curDiff], diffFilled, diffTotal, "diff-" + curDiff));
-  wrap.appendChild(mkBar(curCat, catFilled, catTotal, "cat-" + curDiff + "-" + curCat));
-  return wrap;
-}
-
-function renderDiscardRow() {
-  const row = el("div", { class: "discard-row" });
-  if (pendingDiscardConfirm) {
-    row.appendChild(el("span", { class: "discard-confirm-text", text: "Discard this question? " }));
-    row.appendChild(el("button", { class: "discard-confirm-yes", text: "Yes", onclick: discardCurrent }));
-    row.appendChild(el("button", { class: "discard-confirm-cancel", text: "Cancel", onclick: function () { pendingDiscardConfirm = false; render(); } }));
-  } else {
-    row.appendChild(el("button", {
-      class: "discard-link",
-      text: "Discard question",
-      onclick: function () { pendingDiscardConfirm = true; render(); }
-    }));
-  }
-  return row;
 }
 
 function renderProgressBar() {
-  if (session.mode === "test") {
-    const bar = el("div", { class: "progress-bar segmented" });
-    session.order.forEach(function (id) {
-      const q = QUESTIONS.find(function (x) { return x.id === id; });
-      const diff = q ? q.difficulty : "medium";
-      const filled = Object.prototype.hasOwnProperty.call(session.answers, id);
-      const seg = el("div", { class: "seg seg-" + diff + (filled ? " filled" : "") });
-      bar.appendChild(seg);
-    });
-    return bar;
-  }
-  const bar = el("div", { class: "progress-bar" });
-  bar.appendChild(el("div", { class: "progress-fill", style: "width: " + (((currentIndex + 1) / session.order.length) * 100) + "%" }));
+  const bar = el("div", { class: "progress-bar segmented" });
+  session.order.forEach(function (id) {
+    const q = QUESTIONS.find(function (x) { return x.id === id; });
+    const diff = q ? q.difficulty : "medium";
+    const filled = Object.prototype.hasOwnProperty.call(session.answers, id);
+    bar.appendChild(el("div", { class: "seg seg-" + diff + (filled ? " filled" : "") }));
+  });
   return bar;
 }
 
+// --- Quiz screen -------------------------------------------------------------
 function renderQuiz() {
-  if (!session) { screen = "landing"; render(); return; }
+  if (!session) { startNewSession(); return; }
   if (currentIndex >= session.order.length) { screen = "results"; render(); return; }
   const q = getQuestion(currentIndex);
-  if (q && isDestroyed(q.id)) {
-    const fwd = nextLiveIndex(currentIndex + 1, +1);
-    if (fwd >= session.order.length) {
-      const bwd = nextLiveIndex(currentIndex - 1, -1);
-      if (bwd < 0) { screen = "results"; render(); return; }
-      currentIndex = bwd;
-    } else {
-      currentIndex = fwd;
-    }
-    render();
-    return;
-  }
-  const isTestMode = session.mode === "test";
-  const isMode1 = session.mode === "practice_no_truth";
+  if (!q) return;
 
   if (!session.playOrder) session.playOrder = [];
-  if (q && session.playOrder.indexOf(q.id) === -1) {
-    session.playOrder.push(q.id);
-    saveSession();
-  }
+  if (session.playOrder.indexOf(q.id) === -1) session.playOrder.push(q.id);
 
   const feedback = isFeedbackActive();
-  const mode1Post = isMode1 && isMode1Post();
-  if (q) {
-    if (feedback || mode1Post) ensureTimingStopped(q.id);
-    else ensureTimingActive(q.id);
-  }
 
   app.appendChild(renderHeaderBar());
 
-  let mainTarget;
-  const showSidebar = isTestMode || isMode1;
-  if (showSidebar) {
-    const layout = el("div", { class: "test-layout" });
-    mainTarget = el("div", { class: "test-main" });
-    layout.appendChild(mainTarget);
-    layout.appendChild(renderSidebar(q.set));
-    app.appendChild(layout);
-  } else {
-    mainTarget = app;
-  }
+  const layout = el("div", { class: "test-layout" });
+  const main = el("div", { class: "test-main" });
+  layout.appendChild(main);
+  layout.appendChild(renderSidebar(q.set));
+  app.appendChild(layout);
 
-  if (isMode1) {
-    mainTarget.appendChild(renderMode1ProgressBars(q));
-    if (jumpPanelOpen) mainTarget.appendChild(renderJumpPanel());
-    if (shouldShowExportReminder()) {
-      mainTarget.appendChild(renderExportBanner());
-    }
-    if (!session.hideRecentStrip) {
-      const strip = renderRecentStrip(q);
-      if (strip) mainTarget.appendChild(strip);
-    }
-    if (currentIndex > 0) {
-      const prevQ = getQuestion(currentIndex - 1);
-      if (prevQ && prevQ.category !== q.category) {
-        appendCategoryBanner(mainTarget, q);
-      }
-    }
-  } else {
-    mainTarget.appendChild(renderProgressBar());
-  }
+  main.appendChild(renderProgressBar());
 
   const body = el("div", { class: "question-container" + (suppressNextFade ? "" : " fade-in") });
   suppressNextFade = false;
@@ -3663,49 +997,12 @@ function renderQuiz() {
   body.appendChild(transcriptEl);
   body.appendChild(el("div", { class: "instruction", text: "Where should the highlighted part go?" }));
 
-  // Frances sees Mathieu's draft answer as a soft hint above the option buttons.
-  let mathieuHintForOption = null;
-  if (isMode1 && session.identity === "frances" && mathieuDraftCache) {
-    const draftAns = (mathieuDraftCache.answers || {})[q.id];
-    if (draftAns !== null && draftAns !== undefined) {
-      mathieuHintForOption = draftAns;
-      const hint = el("div", { class: "mathieu-hint" });
-      const line = el("div", { class: "mathieu-hint-line" });
-      line.appendChild(document.createTextNode("Flore & Mathieu suggested: "));
-      line.appendChild(el("strong", { text: draftAns }));
-      const mUnc = mathieuDraftCache.uncertain && mathieuDraftCache.uncertain[q.id];
-      if (mUnc) line.appendChild(document.createTextNode(" \u00b7 flagged uncertain"));
-      const mNote = mathieuDraftCache.notes && typeof mathieuDraftCache.notes[q.id] === "string" ? mathieuDraftCache.notes[q.id].trim() : "";
-      if (mNote) {
-        const noteBtn = el("button", {
-          class: "mathieu-note-toggle",
-          title: expandedMathieuNoteFor === q.id ? "Hide note" : "Show note",
-          onclick: function () {
-            expandedMathieuNoteFor = (expandedMathieuNoteFor === q.id) ? null : q.id;
-            render();
-          }
-        });
-        noteBtn.appendChild(document.createTextNode("\ud83d\udcdd"));
-        line.appendChild(noteBtn);
-      }
-      hint.appendChild(line);
-      if (mNote && expandedMathieuNoteFor === q.id) {
-        const noteBox = el("div", { class: "mathieu-note" });
-        noteBox.textContent = mNote;
-        hint.appendChild(noteBox);
-      }
-      body.appendChild(hint);
-    }
-  }
-
   const userChoice = session.answers[q.id];
-  const hasRecorded = Object.prototype.hasOwnProperty.call(session.answers, q.id);
-  const previousChoice = (!feedback && !mode1Post && hasRecorded && userChoice !== null) ? userChoice : null;
   const truth = session.groundTruth && session.groundTruth[q.id];
-  const wireHover = (isTestMode || isMode1) && q.set === "subsection";
+  const wireHover = q.set === "subsection";
 
   const SOAP_OPT_CLASS = { "Subjective": "opt-subjective", "Objective": "opt-objective", "Assessment": "opt-assessment", "Plan": "opt-plan" };
-  const optsClass = "options" + (q.options.length === 2 ? " opts-2" : "") + (mode1Post ? " mode1-post" : "");
+  const optsClass = "options" + (q.options.length === 2 ? " opts-2" : "");
   const opts = el("div", { class: optsClass });
   q.options.forEach(function (opt, i) {
     let cls = "option";
@@ -3713,15 +1010,7 @@ function renderQuiz() {
     const btn = el("button", {
       class: cls,
       onclick: function () {
-        // Test-mode feedback: any click advances; the answer is locked once feedback is showing.
         if (feedback) { advance(); return; }
-        // Mode-1 post-answer: clicking the already-selected option advances; clicking a different option
-        // changes the recorded answer and stays on the question for review.
-        if (mode1Post) {
-          if (opt === userChoice) advance();
-          else selectAnswer(q.id, opt);
-          return;
-        }
         selectAnswer(q.id, opt);
       }
     });
@@ -3731,14 +1020,6 @@ function renderQuiz() {
       if (opt === truth) btn.className += " correct";
       else if (opt === userChoice) btn.className += " wrong";
       else btn.className += " muted-opt";
-    } else if (mode1Post && opt === userChoice) {
-      btn.classList.add("mode1-selected");
-    } else if (opt === previousChoice) {
-      btn.classList.add("previous-choice");
-      btn.appendChild(el("span", { class: "prev-tag", text: "your previous answer" }));
-    }
-    if (mathieuHintForOption && opt === mathieuHintForOption && !feedback) {
-      btn.classList.add("from-mathieu");
     }
     if (wireHover) {
       btn.addEventListener("mouseenter", function () { highlightSidebarFor(opt); });
@@ -3759,328 +1040,19 @@ function renderQuiz() {
       body.appendChild(line);
     }
     const nextRow = el("div", { class: "button-row" });
-    nextRow.appendChild(el("button", {
-      class: "primary",
-      text: "Next \u2192",
-      onclick: advance
-    }));
+    nextRow.appendChild(el("button", { class: "primary", text: "Next \u2192", onclick: advance }));
     body.appendChild(nextRow);
     body.appendChild(el("p", { class: "muted next-hint", text: "Press Enter or Space to continue." }));
-  } else if (mode1Post) {
-    const row = el("div", { class: "button-row mode1-post-row" });
-    row.appendChild(renderUncertainToggle(q.id));
-    row.appendChild(el("button", {
-      class: "primary",
-      text: "Next \u2192",
-      onclick: advance
-    }));
-    body.appendChild(row);
-    body.appendChild(el("p", { class: "muted next-hint", text: "Press Enter or Space to continue \u00b7 click your answer again to advance \u00b7 click another option to change it \u00b7 D to discard." }));
   } else {
     const skipRow = el("div", { class: "skip-row" });
-    skipRow.appendChild(el("button", {
-      class: "link",
-      text: "Skip",
-      onclick: function () { selectAnswer(q.id, null); }
-    }));
+    skipRow.appendChild(el("button", { class: "link", text: "Skip", onclick: function () { selectAnswer(q.id, null); } }));
     body.appendChild(skipRow);
   }
 
-  if (isMode1) {
-    body.appendChild(renderDiscardRow());
-    body.appendChild(renderNoteSection(q.id));
-  }
-
-  mainTarget.appendChild(body);
+  main.appendChild(body);
 }
 
-function renderUncertainToggle(id) {
-  const on = !!(session.uncertain && session.uncertain[id]);
-  const btn = el("button", {
-    class: "uncertain-toggle" + (on ? " on" : ""),
-    title: on ? "Marked uncertain (click to clear)" : "Mark uncertain (revisit later)",
-    onclick: function () { setUncertain(id, !on); render(); }
-  });
-  btn.appendChild(document.createTextNode(on ? "? Uncertain" : "? Uncertain"));
-  return btn;
-}
-
-function renderNoteSection(id) {
-  const wrap = el("div", { class: "note-section" });
-  const note = (session.notes && typeof session.notes[id] === "string") ? session.notes[id] : "";
-  const expanded = noteExpandedFor.has(id) || note.trim() !== "";
-  const toggle = el("button", {
-    class: "note-toggle",
-    text: expanded ? "Hide note" : (note ? "Edit note" : "Add note"),
-    onclick: function () {
-      if (noteExpandedFor.has(id)) noteExpandedFor.delete(id);
-      else noteExpandedFor.add(id);
-      render();
-    }
-  });
-  wrap.appendChild(toggle);
-  if (expanded) {
-    const ta = el("textarea", { class: "note-textarea", placeholder: "Note for this question (autosaved)", rows: "3" });
-    ta.value = note;
-    ta.addEventListener("input", function () {
-      scheduleNoteSave(id, ta.value);
-    });
-    wrap.appendChild(ta);
-  }
-  return wrap;
-}
-
-function renderRecentStrip(currentQ) {
-  const ids = recentAnsweredIds(currentQ.id);
-  if (ids.length === 0) return null;
-  const strip = el("div", { class: "recent-strip" });
-  const head = el("div", { class: "recent-strip-head" });
-  head.appendChild(el("span", { class: "muted", text: "Recent answers" }));
-  head.appendChild(el("button", {
-    class: "link",
-    text: "Hide",
-    onclick: function () {
-      session.hideRecentStrip = true;
-      saveSession();
-      render();
-    }
-  }));
-  strip.appendChild(head);
-  ids.forEach(function (id) {
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    if (!q) return;
-    const a = session.answers[id];
-    const isExpanded = expandedRecentId === id;
-    const entry = el("div", { class: "recent-entry" + (isExpanded ? " expanded" : "") });
-    const summary = el("div", {
-      class: "recent-summary",
-      onclick: function () {
-        expandedRecentId = (expandedRecentId === id) ? null : id;
-        render();
-      }
-    });
-    summary.appendChild(el("span", { class: "recent-id", text: "#" + id }));
-    summary.appendChild(el("span", { class: "recent-cat", text: q.category }));
-    const sit = q.situation || "";
-    summary.appendChild(el("span", { class: "recent-sit", text: sit.length > 60 ? sit.slice(0, 57) + "\u2026" : sit }));
-    summary.appendChild(el("span", { class: "recent-arrow", text: "\u2192" }));
-    summary.appendChild(el("span", { class: "recent-ans", text: a }));
-    if (session.uncertain && session.uncertain[id]) {
-      summary.appendChild(el("span", { class: "recent-flag", text: " ?" }));
-    }
-    entry.appendChild(summary);
-    if (isExpanded) {
-      const det = el("div", { class: "recent-detail" });
-      const trEl = el("div", { class: "transcript" });
-      trEl.appendChild(renderTranscript(q.transcript));
-      det.appendChild(trEl);
-      det.appendChild(el("div", { class: "muted", text: "Answer: " + a }));
-      entry.appendChild(det);
-    }
-    strip.appendChild(entry);
-  });
-  return strip;
-}
-
-function renderExportBanner() {
-  const banner = el("div", { class: "export-banner" });
-  banner.appendChild(el("span", { text: "It's been a while since you exported. Export current state?" }));
-  const row = el("div", { class: "export-banner-buttons" });
-  row.appendChild(el("button", {
-    class: "primary",
-    text: "Export now",
-    onclick: triggerExportCurrentState
-  }));
-  row.appendChild(el("button", {
-    class: "secondary",
-    text: "Dismiss",
-    onclick: function () { snoozeExportReminder(); render(); }
-  }));
-  banner.appendChild(row);
-  return banner;
-}
-
-function appendCategoryBanner(target, q) {
-  const count = session.order.filter(function (id) {
-    const qq = QUESTIONS.find(function (x) { return x.id === id; });
-    return qq && qq.difficulty === q.difficulty && qq.category === q.category;
-  }).length;
-  const banner = el("div", { class: "category-banner" });
-  banner.textContent = "Now: " + q.category + " \u00b7 " + count + " question" + (count === 1 ? "" : "s") + " in this block.";
-  target.appendChild(banner);
-  const removeIt = function () {
-    if (banner.parentNode) banner.parentNode.removeChild(banner);
-    document.removeEventListener("mousedown", removeIt);
-    document.removeEventListener("keydown", removeIt);
-  };
-  setTimeout(function () {
-    document.addEventListener("mousedown", removeIt);
-    document.addEventListener("keydown", removeIt);
-  }, 50);
-  setTimeout(removeIt, 2500);
-}
-
-function selectAnswer(id, choice) {
-  if (!session) return;
-  pendingDiscardConfirm = false;
-  const wasNonNull = session.answers[id] !== null && session.answers[id] !== undefined;
-  ensureTimingStopped(id);
-  dismissedFeedbackFor.delete(id);
-  session.answers[id] = choice;
-  saveSession();
-  flashSaved();
-  if (session.mode === "practice_no_truth") {
-    if (choice === null) {
-      advance();
-      return;
-    }
-    playSessionAnsweredIds.add(id);
-    if (!wasNonNull && typeof _lastFinalizedDeltaSec === "number") {
-      pushRecentDuration(_lastFinalizedDeltaSec);
-    }
-    suppressNextFade = true;
-    render();
-    return;
-  }
-  const hasGT = session.groundTruth && Object.prototype.hasOwnProperty.call(session.groundTruth, id);
-  if (choice !== null && hasGT) {
-    render();
-  } else {
-    advance();
-  }
-}
-
-function discardCurrent() {
-  if (!session) return;
-  const q = getQuestion(currentIndex);
-  if (!q) return;
-  ensureTimingStopped(q.id);
-  markDestroyed(q.id);
-  if (session.mode === "practice_no_truth") playSessionDiscardedIds.add(q.id);
-  pendingDiscardConfirm = false;
-  dismissedFeedbackFor.delete(q.id);
-  flashSaved();
-  advance();
-}
-
-function startReview(ids) {
-  if (!session || !session.groundTruth || !ids || ids.length === 0) return;
-  reviewMode = {
-    ids: ids.slice(),
-    currentIndex: 0,
-    answers: {},
-    groundTruth: session.groundTruth
-  };
-  suppressNextFade = true;
-  screen = "review";
-  render();
-}
-
-function exitReview() {
-  reviewMode = null;
-  screen = "results";
-  suppressNextFade = true;
-  render();
-}
-
-function reviewAdvance() {
-  if (!reviewMode) return;
-  reviewMode.currentIndex++;
-  if (reviewMode.currentIndex >= reviewMode.ids.length) {
-    exitReview();
-    return;
-  }
-  render();
-}
-
-function reviewBack() {
-  if (!reviewMode || reviewMode.currentIndex === 0) return;
-  reviewMode.currentIndex--;
-  suppressNextFade = true;
-  render();
-}
-
-function renderReview() {
-  if (!reviewMode) { screen = "results"; render(); return; }
-  if (reviewMode.currentIndex >= reviewMode.ids.length) { exitReview(); return; }
-  const id = reviewMode.ids[reviewMode.currentIndex];
-  const q = QUESTIONS.find(function (x) { return x.id === id; });
-  if (!q) { reviewAdvance(); return; }
-
-  const bar = el("div", { class: "header-bar" });
-  if (reviewMode.currentIndex > 0) {
-    bar.appendChild(el("button", { class: "link", text: "\u2190 Back", onclick: reviewBack }));
-  }
-  bar.appendChild(el("span", { class: "review-tag", text: "Review mode" }));
-  bar.appendChild(el("span", { class: "progress-text", text: "Q " + (reviewMode.currentIndex + 1) + " / " + reviewMode.ids.length }));
-  bar.appendChild(el("button", { class: "finish spacer", text: "Done reviewing", onclick: exitReview }));
-  app.appendChild(bar);
-
-  const progress = el("div", { class: "progress-bar" });
-  progress.appendChild(el("div", { class: "progress-fill", style: "width: " + (((reviewMode.currentIndex + 1) / reviewMode.ids.length) * 100) + "%" }));
-  app.appendChild(progress);
-
-  const body = el("div", { class: "question-container" + (suppressNextFade ? "" : " fade-in") });
-  suppressNextFade = false;
-  body.appendChild(el("div", { class: "situation", text: q.situation }));
-  const transcriptEl = el("div", { class: "transcript" });
-  transcriptEl.appendChild(renderTranscript(q.transcript));
-  body.appendChild(transcriptEl);
-  body.appendChild(el("div", { class: "instruction", text: "Where should the highlighted part go?" }));
-
-  const truth = reviewMode.groundTruth[id];
-  const userChoice = reviewMode.answers[id];
-  const feedback = userChoice !== undefined && userChoice !== null;
-  const SOAP_OPT_CLASS = { "Subjective": "opt-subjective", "Objective": "opt-objective", "Assessment": "opt-assessment", "Plan": "opt-plan" };
-  const opts = el("div", { class: "options" });
-  q.options.forEach(function (opt, i) {
-    let cls = "option";
-    if (!feedback && SOAP_OPT_CLASS[opt]) cls += " " + SOAP_OPT_CLASS[opt];
-    const btn = el("button", {
-      class: cls,
-      onclick: function () {
-        if (feedback) reviewAdvance();
-        else { reviewMode.answers[id] = opt; render(); }
-      }
-    });
-    btn.appendChild(el("span", { class: "key-hint", text: String(i + 1) }));
-    btn.appendChild(document.createTextNode(opt));
-    if (feedback) {
-      if (opt === truth) btn.className += " correct";
-      else if (opt === userChoice) btn.className += " wrong";
-      else btn.className += " muted-opt";
-    }
-    opts.appendChild(btn);
-  });
-  body.appendChild(opts);
-
-  if (feedback) {
-    if (userChoice === truth) {
-      body.appendChild(el("p", { class: "feedback-line correct-line", text: "Correct." }));
-    } else {
-      const line = el("p", { class: "feedback-line" });
-      line.appendChild(document.createTextNode("Correct answer: "));
-      line.appendChild(el("strong", { text: truth }));
-      body.appendChild(line);
-    }
-    const nextRow = el("div", { class: "button-row" });
-    nextRow.appendChild(el("button", { class: "primary", text: "Next \u2192", onclick: reviewAdvance }));
-    body.appendChild(nextRow);
-    body.appendChild(el("p", { class: "muted next-hint", text: "Press Enter or Space to continue." }));
-  }
-
-  app.appendChild(body);
-}
-
-function advance() {
-  if (!session) return;
-  finalizeTimer();
-  pendingDiscardConfirm = false;
-  currentIndex = nextLiveIndex(currentIndex + 1, +1);
-  if (currentIndex >= session.order.length) screen = "results";
-  render();
-}
-
+// --- Results -----------------------------------------------------------------
 function getResultsTier(percent) {
   if (percent >= 90) return { key: "outstanding", emoji: "\uD83C\uDFC6", side: "\uD83C\uDF89 \u2728 \uD83C\uDF1F", headline: "Outstanding!", caption: "You nailed the edge cases." };
   if (percent >= 75) return { key: "strong", emoji: "\uD83C\uDFAF", side: "\uD83D\uDCAA \u2728", headline: "Strong work!", caption: "Sharp instincts on a tricky set." };
@@ -4089,55 +1061,18 @@ function getResultsTier(percent) {
   return { key: "practice", emoji: "\uD83C\uDF31", side: "\uD83D\uDCAD \uD83C\uDF31", headline: "Keep practicing.", caption: "Every attempt sharpens the eye." };
 }
 
-function computeAvgTime() {
-  if (!session || !session.times) return null;
-  let total = 0, n = 0;
-  session.order.forEach(function (id) {
-    const t = session.times[id];
-    if (typeof t !== "number" || t <= 0) return;
-    const ans = session.answers[id];
-    if (ans === undefined) return;
-    total += t;
-    n++;
-  });
-  if (n === 0) return null;
-  return Math.round((total / n) * 10) / 10;
-}
-
 function renderCelebrationCard() {
-  const sessionIds = new Set(session.order);
-  let answered = 0, skipped = 0;
-  session.order.forEach(function (id) {
-    if (!Object.prototype.hasOwnProperty.call(session.answers, id)) return;
-    if (session.answers[id] === null) skipped++;
-    else answered++;
-  });
-  const total = session.order.length;
-  const avgTime = computeAvgTime();
-
-  if (!session.groundTruth) {
-    const card = el("div", { class: "celebration tier-neutral" });
-    card.appendChild(el("div", { class: "celeb-emoji", text: "\u2705" }));
-    card.appendChild(el("div", { class: "celeb-headline", text: "Session complete" }));
-    card.appendChild(el("div", { class: "celeb-score", text: answered + " / " + total }));
-    card.appendChild(el("div", { class: "celeb-percent", text: "questions answered" + (skipped > 0 ? " \u00b7 " + skipped + " skipped" : "") + (avgTime !== null ? " \u00b7 Avg: " + avgTime.toFixed(1) + " s per question" : "") }));
-    card.appendChild(el("div", { class: "celeb-caption", text: "Thanks for playing, " + session.player + "." }));
-    return card;
-  }
-
   const score = computeScore();
   if (!score || score.answeredWithTruth === 0) {
-    const card = el("div", { class: "celebration tier-neutral" });
+    const card = el("div", { class: "celebration tier-growing" });
     card.appendChild(el("div", { class: "celeb-emoji", text: "\uD83D\uDCED" }));
-    card.appendChild(el("div", { class: "celeb-headline", text: "No scored answers" }));
-    card.appendChild(el("div", { class: "celeb-caption", text: "No answered questions had a ground-truth entry." }));
+    card.appendChild(el("div", { class: "celeb-headline", text: "No answers recorded" }));
+    card.appendChild(el("div", { class: "celeb-caption", text: "All questions were skipped." }));
     return card;
   }
-
   const tier = getResultsTier(score.percent);
   const card = el("div", { class: "celebration tier-" + tier.key });
-  const emoji = el("div", { class: "celeb-emoji bob", text: tier.emoji });
-  card.appendChild(emoji);
+  card.appendChild(el("div", { class: "celeb-emoji bob", text: tier.emoji }));
   card.appendChild(el("div", { class: "celeb-side", text: tier.side }));
   card.appendChild(el("div", { class: "celeb-headline", text: tier.headline }));
   card.appendChild(el("div", { class: "celeb-score", text: score.correct + " / " + score.answeredWithTruth }));
@@ -4156,336 +1091,27 @@ function renderCelebrationCard() {
   const pills = el("div", { class: "celeb-pills" });
   VALID_DIFFICULTIES.forEach(function (d) {
     const b = diffBuckets[d];
-    const pill = el("span", { class: "celeb-pill diff-" + d + (b.total === 0 ? " dim" : ""), text: DIFFICULTY_LABELS[d] + " " + b.correct + "/" + b.total });
-    pills.appendChild(pill);
+    pills.appendChild(el("span", { class: "celeb-pill diff-" + d + (b.total === 0 ? " dim" : ""), text: DIFFICULTY_LABELS[d] + " " + b.correct + "/" + b.total }));
   });
   card.appendChild(pills);
-
-  if (avgTime !== null) {
-    card.appendChild(el("div", { class: "celeb-percent", text: "Avg: " + avgTime.toFixed(1) + " s per question" }));
-  }
   card.appendChild(el("div", { class: "celeb-caption", text: tier.caption }));
   return card;
 }
 
-function renderSessionReportBlock() {
-  if (!session || session.mode !== "practice_no_truth") return;
-  const r = buildSessionReport();
-  const block = el("div", { class: "session-report" });
-  block.appendChild(el("h2", { text: "Session report" }));
-  block.appendChild(el("p", { class: "muted", text: "Just this play session (resume starts a fresh count)." }));
-
-  const grid = el("div", { class: "session-report-grid" });
-  function stat(label, value) {
-    const cell = el("div", { class: "report-stat" });
-    cell.appendChild(el("div", { class: "report-stat-val", text: String(value) }));
-    cell.appendChild(el("div", { class: "report-stat-label", text: label }));
-    return cell;
-  }
-  const mins = Math.round(r.active_time_seconds / 60);
-  const avg = r.questions_answered > 0 ? r.avg_seconds_per_question.toFixed(1) + " s" : "\u2014";
-  grid.appendChild(stat("Answered", r.questions_answered));
-  grid.appendChild(stat("Discarded", r.questions_discarded));
-  grid.appendChild(stat("Active time", mins + " min"));
-  grid.appendChild(stat("Avg / question", avg));
-  grid.appendChild(stat("Flagged uncertain", r.uncertain_flagged));
-  grid.appendChild(stat("Discarded w/ notes", r.discarded_with_notes));
-  block.appendChild(grid);
-
-  const diffLine = el("p", { class: "muted" });
-  diffLine.textContent = "Difficulty: " +
-    "Easy " + r.by_difficulty.easy + " \u00b7 " +
-    "Medium " + r.by_difficulty.medium + " \u00b7 " +
-    "Hard " + r.by_difficulty.hard;
-  block.appendChild(diffLine);
-
-  if (Object.keys(r.by_category).length > 0) {
-    const catLine = el("p", { class: "muted category-line" });
-    const parts = Object.keys(r.by_category).sort().map(function (c) { return c + ": " + r.by_category[c]; });
-    catLine.textContent = "By category \u2014 " + parts.join(" \u00b7 ");
-    block.appendChild(catLine);
-  }
-
-  const row = el("div", { class: "button-row" });
-  row.appendChild(el("button", {
-    class: "secondary",
-    text: "Download session report",
-    onclick: downloadSessionReport
-  }));
-  block.appendChild(row);
-  app.appendChild(block);
-}
-
-function renderMode1ResultsList() {
-  if (!session) return;
-  const ids = (session.order || []).slice().sort(function (a, b) { return a - b; });
-  Object.keys(session.destroyed || {}).forEach(function (k) {
-    const id = +k;
-    if (ids.indexOf(id) === -1) ids.push(id);
-  });
-  // Hide source-discarded questions from the results UI even if they appear in
-  // the cached order from a session built before the annotation was added.
-  for (let i = ids.length - 1; i >= 0; i--) {
-    if (isSourceDiscarded(ids[i])) ids.splice(i, 1);
-  }
-  ids.sort(function (a, b) { return a - b; });
-  const wrap = el("div", { class: "mode1-results-list" });
-  wrap.appendChild(el("h2", { text: "All questions" }));
-  wrap.appendChild(el("p", { class: "muted", text: "Click any row to inspect or edit. Changes save automatically." }));
-  ids.forEach(function (id) {
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    if (!q) return;
-    wrap.appendChild(renderMode1ResultRow(q));
-  });
-  app.appendChild(wrap);
-}
-
-function renderMode1ResultRow(q) {
-  const id = q.id;
-  const isExpanded = expandedResultsId === id;
-  const destroyed = isDestroyed(id);
-  const ans = session.answers[id];
-  const hasAns = ans !== null && ans !== undefined;
-  const uncertain = !!(session.uncertain && session.uncertain[id]);
-  const note = (session.notes && typeof session.notes[id] === "string") ? session.notes[id] : "";
-
-  const item = el("div", { class: "mode1-row" + (destroyed ? " destroyed" : "") + (isExpanded ? " expanded" : "") });
-
-  const summary = el("div", {
-    class: "mode1-row-summary",
-    onclick: function () {
-      expandedResultsId = (expandedResultsId === id) ? null : id;
-      render();
-    }
-  });
-  summary.appendChild(el("span", { class: "mode1-row-id", text: "#" + id }));
-  summary.appendChild(el("span", { class: "mode1-row-cat", text: q.category }));
-  summary.appendChild(el("span", { class: "mode1-row-diff diff-tag diff-" + q.difficulty, text: DIFFICULTY_LABELS[q.difficulty] }));
-  const sit = q.situation || "";
-  summary.appendChild(el("span", { class: "mode1-row-sit", text: sit.length > 70 ? sit.slice(0, 67) + "\u2026" : sit }));
-  const ansLabel = destroyed ? "Discarded" : (hasAns ? ans : "Skipped");
-  summary.appendChild(el("span", { class: "mode1-row-arrow", text: "\u2192" }));
-  summary.appendChild(el("span", { class: "mode1-row-ans" + (destroyed ? " row-discarded" : (hasAns ? "" : " row-skipped")), text: ansLabel }));
-  if (uncertain && !destroyed) summary.appendChild(el("span", { class: "mode1-row-flag", text: " ?" }));
-  if (note && note.trim() !== "") summary.appendChild(el("span", { class: "mode1-row-note-dot", title: "Has note", text: " \u270e" }));
-  item.appendChild(summary);
-
-  const sourceNote = sourceNoteFor(id);
-  if (sourceNote) {
-    item.appendChild(el("div", { class: "mode1-row-source-note", text: "Author note: " + sourceNote }));
-  }
-
-  if (isExpanded) {
-    const det = el("div", { class: "mode1-row-detail" });
-    const tEl = el("div", { class: "transcript" });
-    tEl.appendChild(renderTranscript(q.transcript));
-    det.appendChild(tEl);
-
-    if (destroyed) {
-      const restoreRow = el("div", { class: "button-row" });
-      const meta = (session.destroyed && session.destroyed[id])
-        || (session.identity === "frances" && mathieuDraftCache && mathieuDraftCache.destroyed && mathieuDraftCache.destroyed[id])
-        || null;
-      const fromMathieu = session.identity === "frances" && (!session.destroyed || !session.destroyed[id]) && mathieuDraftCache && mathieuDraftCache.destroyed && mathieuDraftCache.destroyed[id];
-      restoreRow.appendChild(el("span", { class: "muted", text: (fromMathieu ? "Discarded by Flore & Mathieu" : "Discarded") + (meta && meta.at ? " at " + meta.at : "") }));
-      if (!fromMathieu) {
-        restoreRow.appendChild(el("button", {
-          class: "secondary",
-          text: "Restore",
-          onclick: function () { restoreQuestion(id); render(); }
-        }));
-      }
-      det.appendChild(restoreRow);
-    } else {
-      const optsWrap = el("div", { class: "options" + (q.options.length === 2 ? " opts-2" : "") + " mode1-edit-options" });
-      q.options.forEach(function (opt) {
-        const btn = el("button", {
-          class: "option" + (opt === ans ? " mode1-selected" : ""),
-          onclick: function () {
-            const wasNull = !hasAns;
-            session.answers[id] = opt;
-            if (wasNull) playSessionAnsweredIds.add(id);
-            saveSession();
-            flashSaved();
-            render();
-          }
-        });
-        btn.appendChild(document.createTextNode(opt));
-        optsWrap.appendChild(btn);
-      });
-      det.appendChild(optsWrap);
-
-      const editRow = el("div", { class: "mode1-edit-controls" });
-      const uBtn = el("button", {
-        class: "uncertain-toggle" + (uncertain ? " on" : ""),
-        text: uncertain ? "? Uncertain" : "? Uncertain",
-        onclick: function () { setUncertain(id, !uncertain); render(); }
-      });
-      editRow.appendChild(uBtn);
-      editRow.appendChild(el("button", {
-        class: "discard-link",
-        text: "Discard",
-        onclick: function () {
-          markDestroyed(id);
-          flashSaved();
-          render();
-        }
-      }));
-      if (hasAns) {
-        editRow.appendChild(el("button", {
-          class: "link",
-          text: "Clear answer",
-          onclick: function () {
-            session.answers[id] = null;
-            saveSession();
-            flashSaved();
-            render();
-          }
-        }));
-      }
-      det.appendChild(editRow);
-
-      const noteWrap = el("div", { class: "note-section" });
-      noteWrap.appendChild(el("label", { class: "muted", text: "Note" }));
-      const ta = el("textarea", { class: "note-textarea", placeholder: "Note for this question (autosaved)", rows: "3" });
-      ta.value = note;
-      ta.addEventListener("input", function () { scheduleNoteSave(id, ta.value); });
-      noteWrap.appendChild(ta);
-      det.appendChild(noteWrap);
-    }
-
-    item.appendChild(det);
-  }
-  return item;
-}
-
 function renderResults() {
-  if (!session) { screen = "landing"; render(); return; }
-
-  const isMode1 = session.mode === "practice_no_truth";
-  const sessionIds = new Set(session.order);
   app.appendChild(renderCelebrationCard());
 
-  const actions = el("div", { class: "button-row" });
-  actions.appendChild(el("button", { class: "primary", text: "Download as JSON", onclick: downloadJSON }));
-  app.appendChild(actions);
-
-  if (isMode1) {
-    const navRow = el("div", { class: "button-row" });
-    navRow.appendChild(el("button", {
-      class: "secondary",
-      text: "Back to landing",
-      onclick: function () {
-        session = null;
-        pendingDiscardConfirm = false;
-        mode1BarValues = {};
-        screen = "landing";
-        render();
-      }
-    }));
-    navRow.appendChild(el("button", {
-      class: "secondary",
-      text: "Continue authoring",
-      onclick: function () {
-        currentIndex = firstPendingIndexMode1();
-        if (currentIndex >= session.order.length) currentIndex = nextLiveIndex(0, +1);
-        if (currentIndex >= session.order.length) return;
-        pendingDiscardConfirm = false;
-        suppressNextFade = true;
-        screen = "quiz";
-        render();
-      }
-    }));
-    app.appendChild(navRow);
-  }
-
-  const restartRow = el("div", { class: "button-row" });
-  restartRow.appendChild(el("button", {
-    class: "secondary",
-    text: "Restart",
-    onclick: function () {
-      if (!confirm("Clear all saved answers and start over?")) return;
-      const wasMode = session ? session.mode : null;
-      const wasIdentity = session ? session.identity : null;
-      session = null;
-      if (wasMode === "practice_no_truth") {
-        if (wasIdentity) clearMode1SessionFor(wasIdentity);
-      } else {
-        clearGenericSession();
-      }
-      pendingMode = null;
-      pendingQuestionSet = "both";
-      pendingDifficulties = ["easy", "medium", "hard"];
-      pendingRandomize = false;
-      dismissedFeedbackFor = new Set();
-      reviewMode = null;
-      pendingDiscardConfirm = false;
-      mode1BarValues = {};
-      currentIndex = 0;
-      screen = "landing";
-      render();
-    }
+  const playRow = el("div", { class: "button-row" });
+  playRow.appendChild(el("button", {
+    class: "primary",
+    text: "Play again",
+    onclick: function () { startNewSession(); }
   }));
-  app.appendChild(restartRow);
+  app.appendChild(playRow);
 
-  if (isMode1) {
-    renderSessionReportBlock();
-    const ownDestroyedCount = Object.keys(session.destroyed || {}).length;
-    const sourceDiscardedCount = Object.keys(SOURCE_DISCARDED).length;
-    if (ownDestroyedCount > 0 || sourceDiscardedCount > 0) {
-      const linkRow = el("div", { class: "button-row" });
-      let label;
-      if (ownDestroyedCount > 0 && sourceDiscardedCount > 0) {
-        label = "View discarded (" + ownDestroyedCount + " session \u00b7 " + sourceDiscardedCount + " source)";
-      } else if (ownDestroyedCount > 0) {
-        label = "View discarded (" + ownDestroyedCount + ")";
-      } else {
-        label = "View discarded in source (" + sourceDiscardedCount + ")";
-      }
-      linkRow.appendChild(el("button", {
-        class: "link",
-        text: label,
-        onclick: function () { discardedModalOpenFor = session.identity || "flore_mathieu"; render(); }
-      }));
-      app.appendChild(linkRow);
-      if (discardedModalOpenFor) renderDiscardedModalFor(discardedModalOpenFor);
-    } else if (discardedModalOpenFor) {
-      discardedModalOpenFor = null;
-    }
-    renderMode1ResultsList();
-    return;
-  }
-
-  if (session.groundTruth) {
-    const incorrectIds = [];
-    const gt = session.groundTruth;
-    const playOrderRev = (session.playOrder || []).filter(function (id) { return session.order.indexOf(id) !== -1; });
-    playOrderRev.forEach(function (id) {
-      if (!Object.prototype.hasOwnProperty.call(gt, id)) return;
-      const ans = session.answers[id];
-      if (ans === undefined || ans === null) return;
-      if (ans !== gt[id]) incorrectIds.push(id);
-    });
-    if (incorrectIds.length > 0) {
-      const reviewRow = el("div", { class: "button-row" });
-      reviewRow.appendChild(el("button", {
-        class: "primary",
-        text: "Review incorrect (" + incorrectIds.length + " question" + (incorrectIds.length === 1 ? "" : "s") + ")",
-        onclick: function () { startReview(incorrectIds); }
-      }));
-      app.appendChild(reviewRow);
-    }
-  }
-
-  if (session.groundTruth) renderScoreSections();
-
-  const playOrder = (session.playOrder || []).filter(function (id) { return sessionIds.has(id); });
-  const seen = new Set(playOrder);
-  const unreached = [];
-  session.order.forEach(function (id) { if (!seen.has(id)) unreached.push(id); });
-  unreached.sort(function (a, b) { return a - b; });
-
-  function renderItem(id) {
+  app.appendChild(el("h2", { text: "Recap" }));
+  const playOrder = (session.playOrder || []).slice();
+  playOrder.forEach(function (id) {
     const q = QUESTIONS.find(function (x) { return x.id === id; });
     if (!q) return;
     const item = el("div", { class: "results-item" });
@@ -4493,10 +1119,11 @@ function renderResults() {
     meta.appendChild(el("span", { class: "category", text: q.category }));
     meta.appendChild(el("span", { class: "diff-tag diff-" + q.difficulty, text: DIFFICULTY_LABELS[q.difficulty] }));
     item.appendChild(meta);
-    item.appendChild(el("div", { class: "situation", text: "#" + q.id + ". " + q.situation }));
-    const itemTranscript = el("div", { class: "transcript" });
-    itemTranscript.appendChild(renderTranscript(q.transcript));
-    item.appendChild(itemTranscript);
+    item.appendChild(el("div", { class: "situation", text: q.situation }));
+    const tEl = el("div", { class: "transcript" });
+    tEl.appendChild(renderTranscript(q.transcript));
+    item.appendChild(tEl);
+
     const ul = el("ul", { class: "results-options" });
     const has = Object.prototype.hasOwnProperty.call(session.answers, q.id);
     const choice = has ? session.answers[q.id] : undefined;
@@ -4513,137 +1140,34 @@ function renderResults() {
       ul.appendChild(li);
     });
     if (choice === null) ul.appendChild(el("li", { class: "skipped", text: "Skipped" }));
-    else if (choice === undefined) ul.appendChild(el("li", { class: "skipped", text: "Not answered" }));
     item.appendChild(ul);
     app.appendChild(item);
-  }
-
-  if (playOrder.length > 0) {
-    app.appendChild(el("h2", { text: "Questions in play order" }));
-    playOrder.forEach(renderItem);
-  }
-
-  if (unreached.length > 0) {
-    app.appendChild(el("h2", { text: "Not reached (" + unreached.length + ")" }));
-    unreached.forEach(renderItem);
-  }
+  });
 }
 
-function renderScoreSections() {
-  const gt = session.groundTruth;
-  if (session.mode !== "test") {
-    const buckets = {};
-    QUESTIONS.forEach(function (q) {
-      if (!Object.prototype.hasOwnProperty.call(gt, q.id)) return;
-      const ans = session.answers[q.id];
-      if (ans === undefined || ans === null) return;
-      if (!buckets[q.category]) buckets[q.category] = { correct: 0, total: 0 };
-      buckets[q.category].total++;
-      if (ans === gt[q.id]) buckets[q.category].correct++;
-    });
-    const categories = Object.keys(buckets);
-    if (categories.length > 0) {
-      app.appendChild(el("h2", { text: "Breakdown by category" }));
-      const table = el("table", { class: "breakdown-table" });
-      const thead = el("thead");
-      const trh = el("tr");
-      trh.appendChild(el("th", { text: "Category" }));
-      trh.appendChild(el("th", { text: "Correct / answered with ground truth" }));
-      thead.appendChild(trh);
-      table.appendChild(thead);
-      const tbody = el("tbody");
-      categories.sort().forEach(function (cat) {
-        const tr = el("tr");
-        tr.appendChild(el("td", { text: cat }));
-        tr.appendChild(el("td", { text: buckets[cat].correct + " / " + buckets[cat].total }));
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
-      app.appendChild(table);
-    }
-  }
-
-  const diffBuckets = { easy: { correct: 0, total: 0 }, medium: { correct: 0, total: 0 }, hard: { correct: 0, total: 0 } };
-  QUESTIONS.forEach(function (q) {
-    if (!Object.prototype.hasOwnProperty.call(gt, q.id)) return;
-    const ans = session.answers[q.id];
-    if (ans === undefined || ans === null) return;
-    if (!diffBuckets[q.difficulty]) return;
-    diffBuckets[q.difficulty].total++;
-    if (ans === gt[q.id]) diffBuckets[q.difficulty].correct++;
-  });
-  const totalDiffAnswered = diffBuckets.easy.total + diffBuckets.medium.total + diffBuckets.hard.total;
-  if (totalDiffAnswered > 0) {
-    app.appendChild(el("h2", { text: "Breakdown by difficulty" }));
-    const parts = VALID_DIFFICULTIES.map(function (d) {
-      return DIFFICULTY_LABELS[d] + ": " + diffBuckets[d].correct + "/" + diffBuckets[d].total;
-    });
-    app.appendChild(el("p", { text: parts.join(" \u00b7 ") }));
-  }
-
-  const incorrect = [];
-  QUESTIONS.forEach(function (q) {
-    if (!Object.prototype.hasOwnProperty.call(gt, q.id)) return;
-    const ans = session.answers[q.id];
-    if (ans === undefined || ans === null) return;
-    if (ans !== gt[q.id]) incorrect.push({ q: q, ans: ans, truth: gt[q.id] });
-  });
-  if (incorrect.length > 0) {
-    app.appendChild(el("h2", { text: "Incorrect answers (" + incorrect.length + ")" }));
-    incorrect.forEach(function (row) {
-      const div = el("div", { class: "incorrect-row" });
-      div.appendChild(el("div", { class: "question", text: "#" + row.q.id + ". " + row.q.situation }));
-      const t = el("div", { class: "transcript" });
-      t.appendChild(renderTranscript(row.q.transcript));
-      div.appendChild(t);
-      div.appendChild(el("div", { text: "Your choice: " + row.ans }));
-      div.appendChild(el("div", { text: "Correct answer: " + row.truth }));
-      app.appendChild(div);
-    });
-  }
+// --- Render dispatch ---------------------------------------------------------
+function render() {
+  app.innerHTML = "";
+  document.body.classList.toggle("has-sidebar", screen === "quiz" && !!session);
+  if (screen === "quiz") renderQuiz();
+  else if (screen === "results") renderResults();
+  window.scrollTo(0, 0);
 }
 
-document.addEventListener("click", function () { trackUserActivity(); }, true);
+// --- Keyboard shortcuts ------------------------------------------------------
 document.addEventListener("keydown", function (e) {
-  trackUserActivity();
   if (e.target) {
     const tag = e.target.tagName;
     if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
     if (e.target.isContentEditable) return;
   }
-  if (document.querySelector(".modal-overlay")) return;
-  if (pendingDiscardConfirm) return;
-
   if (screen === "quiz" && session) {
     const inFeedback = isFeedbackActive();
-    const mode1Post = session.mode === "practice_no_truth" && isMode1Post();
-    if (inFeedback || mode1Post) {
+    if (inFeedback) {
       if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
         e.preventDefault();
         advance();
-        return;
       }
-      if (mode1Post && (e.key === "d" || e.key === "D")) {
-        pendingDiscardConfirm = true;
-        e.preventDefault();
-        render();
-        return;
-      }
-      if (mode1Post) {
-        const num = parseInt(e.key, 10);
-        if (Number.isInteger(num) && num >= 1 && num <= 9) {
-          const q = getQuestion(currentIndex);
-          if (!q || num > q.options.length) return;
-          e.preventDefault();
-          selectAnswer(q.id, q.options[num - 1]);
-        }
-      }
-      return;
-    }
-    if (session.mode === "practice_no_truth" && (e.key === "d" || e.key === "D")) {
-      pendingDiscardConfirm = true;
-      e.preventDefault();
-      render();
       return;
     }
     const num = parseInt(e.key, 10);
@@ -4653,35 +1177,17 @@ document.addEventListener("keydown", function (e) {
       e.preventDefault();
       selectAnswer(q.id, q.options[num - 1]);
     }
-    return;
-  }
-
-  if (screen === "review" && reviewMode) {
-    const id = reviewMode.ids[reviewMode.currentIndex];
-    const q = QUESTIONS.find(function (x) { return x.id === id; });
-    if (!q) return;
-    const userChoice = reviewMode.answers[id];
-    const inFeedback = userChoice !== undefined && userChoice !== null;
-    if (inFeedback) {
-      if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
-        e.preventDefault();
-        reviewAdvance();
-      }
-      return;
-    }
-    const num = parseInt(e.key, 10);
-    if (Number.isInteger(num) && num >= 1 && num <= 9) {
-      if (num > q.options.length) return;
+  } else if (screen === "results") {
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
       e.preventDefault();
-      reviewMode.answers[id] = q.options[num - 1];
-      render();
+      startNewSession();
     }
   }
 });
 
-window.addEventListener("beforeunload", finalizeTimer);
+// --- Boot --------------------------------------------------------------------
+startNewSession();
 
-render();
 </script>
 </body>
 </html>
